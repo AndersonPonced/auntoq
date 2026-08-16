@@ -10,6 +10,7 @@ import Link from 'next/link';
 import type { Categoria } from '@/types';
 import { getSession, signOut, type Usuario } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/client';
+import InstallBanner from '@/components/InstallBanner';
 
 export default function HomePage() {
   const router = useRouter();
@@ -117,6 +118,9 @@ export default function HomePage() {
           <CategoryChips selected={selected} onChange={setSelected} counts={counts} />
         </div>
       </div>
+
+      {/* ── Instalar App ── */}
+      <InstallBanner />
 
       {/* ── Tiendas ── */}
       <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-6 md:py-10">
