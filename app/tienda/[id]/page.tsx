@@ -81,6 +81,7 @@ export default async function TiendaPage({ params }: Props) {
     precio: p.precio,
     disponible: p.disponible,
     fotoUrl: p.foto_url,
+    fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
     descripcion: p.descripcion,
     tiendaId: p.tienda_id,
   }));

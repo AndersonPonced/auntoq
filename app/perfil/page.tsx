@@ -72,6 +72,7 @@ export default function PerfilPage() {
           precio: p.precio,
           disponible: p.disponible,
           fotoUrl: p.foto_url ?? null,
+          fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
           descripcion: p.descripcion,
           tienda_id: p.tienda_id,
         })));
@@ -120,6 +121,7 @@ export default function PerfilPage() {
       precio: values.precio,
       descripcion: values.descripcion,
       foto_url: values.fotoUrl,
+      fotos_urls: values.fotosUrls,
       disponible: values.disponible ?? true,
     }).select().single();
 
@@ -127,6 +129,9 @@ export default function PerfilPage() {
       setProductos(prev => [...prev, data]);
       setAgregandoProducto(false);
       setToast('Producto agregado ✓');
+    } else {
+      console.error(error);
+      setToast('Error al guardar producto');
     }
   }
 
@@ -136,6 +141,7 @@ export default function PerfilPage() {
       precio: values.precio,
       descripcion: values.descripcion,
       foto_url: values.fotoUrl,
+      fotos_urls: values.fotosUrls,
       disponible: values.disponible ?? true,
     }).eq('id', id);
 
@@ -143,6 +149,9 @@ export default function PerfilPage() {
       setProductos(prev => prev.map(p => p.id === id ? { ...p, ...values } : p));
       setEditandoProductoId(null);
       setToast('Producto actualizado ✓');
+    } else {
+      console.error(error);
+      setToast('Error al actualizar producto');
     }
   }
 
