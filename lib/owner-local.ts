@@ -36,6 +36,7 @@ export interface TiendaInput {
 export interface ProductoInput {
   nombre: string;
   precio: number;
+  descripcion?: string;
   disponible: boolean;
   /** Data URL from a photo the owner uploaded. Falls back to a placeholder when omitted. */
   fotoUrl?: string;
@@ -176,6 +177,7 @@ export function addMiProducto(tiendaId: string, input: ProductoInput): Producto 
       input.fotoUrl ??
       `https://picsum.photos/seed/${encodeURIComponent(input.nombre)}-${Date.now()}/400/400`,
     precio: input.precio,
+    descripcion: input.descripcion,
     disponible: input.disponible,
   };
   setMisProductos([...getMisProductos(), nuevo]);
@@ -190,6 +192,7 @@ export function updateMiProducto(id: string, input: ProductoInput): void {
             ...p,
             nombre: input.nombre,
             precio: input.precio,
+            descripcion: input.descripcion,
             disponible: input.disponible,
             fotoUrl: input.fotoUrl ?? p.fotoUrl,
           }

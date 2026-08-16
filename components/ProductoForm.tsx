@@ -25,6 +25,7 @@ export default function ProductoForm({
 }: ProductoFormProps) {
   const [nombre, setNombre] = useState(initialValues?.nombre ?? '');
   const [precio, setPrecio] = useState(initialValues?.precio?.toString() ?? '');
+  const [descripcion, setDescripcion] = useState(initialValues?.descripcion ?? '');
   const [disponible, setDisponible] = useState(initialValues?.disponible ?? true);
   const [fotoUrl, setFotoUrl] = useState(initialValues?.fotoUrl);
   const [procesandoFoto, setProcesandoFoto] = useState(false);
@@ -58,7 +59,13 @@ export default function ProductoForm({
     }
     setError('');
     try {
-      onSubmit({ nombre: nombre.trim(), precio: precioNum, disponible, fotoUrl });
+      onSubmit({ 
+        nombre: nombre.trim(), 
+        precio: precioNum, 
+        descripcion: descripcion.trim() || undefined,
+        disponible, 
+        fotoUrl 
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar.');
     }
@@ -114,6 +121,19 @@ export default function ProductoForm({
           value={precio}
           onChange={(e) => setPrecio(e.target.value)}
           placeholder="Ej. 4.50"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="p-descripcion" className={labelClass}>
+          Descripción (Opcional)
+        </label>
+        <textarea
+          id="p-descripcion"
+          className={`${inputClass} resize-none h-20`}
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Detalles sobre este producto..."
         />
       </div>
 
