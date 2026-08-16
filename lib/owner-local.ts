@@ -40,6 +40,8 @@ export interface ProductoInput {
   disponible: boolean;
   /** Data URL from a photo the owner uploaded. Falls back to a placeholder when omitted. */
   fotoUrl?: string;
+  /** Array of up to 4 data URLs. */
+  fotosUrls?: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -169,13 +171,15 @@ function setMisProductos(productos: Producto[]): void {
 }
 
 export function addMiProducto(tiendaId: string, input: ProductoInput): Producto {
+  const fotosUrls = input.fotosUrls ?? (input.fotoUrl ? [input.fotoUrl] : []);
+  const mainFotoUrl = fotosUrls[0] ?? `https://picsum.photos/seed/${encodeURIComponent(input.nombre)}-${Date.now()}/400/400`;
+  
   const nuevo: Producto = {
     id: `local-prod-${Date.now()}`,
     tiendaId,
     nombre: input.nombre,
-    fotoUrl:
-      input.fotoUrl ??
-      `https://picsum.photos/seed/${encodeURIComponent(input.nombre)}-${Date.now()}/400/400`,
+    fotoUrl: mainFotoUrl,
+    fotosUrls,
     precio: input.precio,
     descripcion: input.descripcion,
     disponible: input.disponible,
@@ -186,18 +190,20 @@ export function addMiProducto(tiendaId: string, input: ProductoInput): Producto 
 
 export function updateMiProducto(id: string, input: ProductoInput): void {
   setMisProductos(
-    getMisProductos().map((p) =>
-      p.id === id
-        ? {
-            ...p,
-            nombre: input.nombre,
-            precio: input.precio,
-            descripcion: input.descripcion,
-            disponible: input.disponible,
-            fotoUrl: input.fotoUrl ?? p.fotoUrl,
-          }
-        : p,
-    ),
+    getMisProductos().map((p) => {
+      if (p.id !== id) return p;
+      const fotosUrls = input.fotosUrls ?? p.fotosUrls ?? (input.fotoUrl ? [input.fotoUrl] : (p.fotoUrl ? [p.fotoUrl] : []));
+      const mainFotoUrl = fotosUrls[0] ?? p.fotoUrl;
+      return {
+        ...p,
+        nombre: input.nombre,
+        precio: input.precio,
+        descripcion: input.descripcion,
+        disponible: input.disponible,
+        fotoUrl: mainFotoUrl,
+        fotosUrls,
+      };
+    }),
   );
 }
 

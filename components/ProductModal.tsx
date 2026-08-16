@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { Producto } from '@/types';
 import { formatPrice } from '@/lib/constants';
@@ -14,6 +14,9 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ producto, storeName, acento, whatsapp, onClose }: ProductModalProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const fotos = producto.fotosUrls?.length ? producto.fotosUrls : (producto.fotoUrl ? [producto.fotoUrl] : []);
+
   // Cerrar con Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -48,13 +51,13 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
 
       {/* Panel */}
       <div
-        className="relative w-full md:max-w-md bg-surface rounded-t-[24px] md:rounded-[24px] overflow-hidden shadow-2xl animate-slide-up"
+        className="relative w-full md:max-w-md bg-surface rounded-t-[24px] md:rounded-[24px] overflow-hidden shadow-2xl animate-slide-up flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 h-8 w-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/30 transition-colors"
+          className="absolute top-4 right-4 z-20 h-8 w-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/30 transition-colors"
           aria-label="Cerrar"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
@@ -62,21 +65,49 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
           </svg>
         </button>
 
-        {/* Image */}
-        <div className="relative w-full aspect-square bg-[#FFE4D6]">
-          {producto.fotoUrl ? (
-            <Image
-              src={producto.fotoUrl}
-              alt={producto.nombre}
-              fill
-              sizes="(max-width: 768px) 100vw, 448px"
-              className="object-cover"
-            />
+        {/* Image Carousel */}
+        <div className="relative w-full aspect-square bg-[#FFE4D6] flex-shrink-0">
+          {fotos.length > 0 ? (
+            <>
+              <Image
+                src={fotos[currentImageIndex]}
+                alt={`${producto.nombre} - Foto ${currentImageIndex + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 448px"
+                className="object-cover"
+                priority
+              />
+              {fotos.length > 1 && (
+                <>
+                  <div className="absolute inset-y-0 left-0 flex items-center px-2">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(i => i === 0 ? fotos.length - 1 : i - 1); }}
+                      className="h-8 w-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/30 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                  </div>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(i => i === fotos.length - 1 ? 0 : i + 1); }}
+                      className="h-8 w-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/30 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+                  <div className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5">
+                    {fotos.map((_, idx) => (
+                      <div key={idx} className={`h-1.5 rounded-full transition-all ${idx === currentImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`} />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-6xl">🛍️</div>
           )}
           {unavailable && (
-            <span className="absolute top-3 left-3 bg-soldout text-white text-xs font-semibold px-3 py-1 rounded-full">
+            <span className="absolute top-3 left-3 z-10 bg-soldout text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
               Agotado
             </span>
           )}

@@ -27,7 +27,12 @@ export default function ProductoForm({
   const [precio, setPrecio] = useState(initialValues?.precio?.toString() ?? '');
   const [descripcion, setDescripcion] = useState(initialValues?.descripcion ?? '');
   const [disponible, setDisponible] = useState(initialValues?.disponible ?? true);
-  const [fotoUrl, setFotoUrl] = useState(initialValues?.fotoUrl);
+  
+  // Use fotosUrls if available, otherwise fallback to fotoUrl, otherwise empty
+  const [fotosUrls, setFotosUrls] = useState<string[]>(
+    initialValues?.fotosUrls ?? (initialValues?.fotoUrl ? [initialValues.fotoUrl] : [])
+  );
+  
   const [procesandoFoto, setProcesandoFoto] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,16 +43,24 @@ export default function ProductoForm({
       setError('La foto es muy pesada (máx. 8MB).');
       return;
     }
+    if (fotosUrls.length >= 4) {
+      setError('Puedes subir máximo 4 fotos.');
+      return;
+    }
     setError('');
     setProcesandoFoto(true);
     try {
       const url = await uploadImage(file, 'productos');
-      setFotoUrl(url);
+      setFotosUrls((prev) => [...prev, url]);
     } catch {
       setError('No se pudo subir la foto. Intenta de nuevo.');
     } finally {
       setProcesandoFoto(false);
     }
+  }
+
+  function handleRemoveFoto(indexToRemove: number) {
+    setFotosUrls((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   }
 
   function handleSubmit(e: FormEvent) {
@@ -64,7 +77,8 @@ export default function ProductoForm({
         precio: precioNum, 
         descripcion: descripcion.trim() || undefined,
         disponible, 
-        fotoUrl 
+        fotosUrls,
+        fotoUrl: fotosUrls[0] // Main image fallback
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar.');
@@ -72,40 +86,56 @@ export default function ProductoForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 bg-surface border border-border rounded-[16px] p-4">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-surface border border-border rounded-[16px] p-4">
       <div>
-        <label className={labelClass}>Foto</label>
-        <div className="flex items-center gap-3">
-          <div className="relative h-16 w-16 flex-shrink-0 rounded-[8px] overflow-hidden bg-[#FFE4D6] border border-border">
-            {fotoUrl && (
-              <Image src={fotoUrl} alt="" fill sizes="64px" className="object-cover" />
-            )}
-          </div>
-          <div className="flex-1 flex flex-col gap-2">
-            {procesandoFoto ? (
-              <div className="w-full text-center px-3 py-2.5 rounded-[8px] border border-border text-sm font-semibold text-muted">
-                Procesando…
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <label className="flex-1 cursor-pointer flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[8px] bg-brand/10 text-brand text-xs font-bold hover:bg-brand/20 transition-colors">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+        <div className="flex justify-between items-end mb-2">
+          <label className="text-sm font-medium text-primary">Fotos ({fotosUrls.length}/4)</label>
+          <span className="text-xs text-muted">La primera será la portada</span>
+        </div>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {fotosUrls.map((url, idx) => (
+            <div key={url} className="relative aspect-square rounded-[8px] overflow-hidden bg-[#FFE4D6] border border-border group">
+              <Image src={url} alt={`Foto ${idx + 1}`} fill sizes="100px" className="object-cover" />
+              <button
+                type="button"
+                onClick={() => handleRemoveFoto(idx)}
+                className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 opacity-80 hover:opacity-100 transition-opacity"
+                aria-label="Eliminar foto"
+              >
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              {idx === 0 && (
+                <div className="absolute bottom-0 inset-x-0 bg-brand/80 backdrop-blur-sm text-white text-[10px] font-bold text-center py-0.5">
+                  PORTADA
+                </div>
+              )}
+            </div>
+          ))}
+          
+          {fotosUrls.length < 4 && (
+            <div className={`relative aspect-square rounded-[8px] border-2 border-dashed border-border flex flex-col items-center justify-center bg-bg/50 ${procesandoFoto ? 'opacity-50' : ''}`}>
+              {procesandoFoto ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-brand border-t-transparent"></div>
+              ) : (
+                <>
+                  <svg className="w-6 h-6 text-brand mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Tomar foto
-                  <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={handleFotoChange} />
-                </label>
-                <label className="flex-1 cursor-pointer flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[8px] border border-border text-primary text-xs font-bold hover:bg-bg transition-colors">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Galería
-                  <input type="file" accept="image/*" className="sr-only" onChange={handleFotoChange} />
-                </label>
-              </div>
-            )}
-          </div>
+                  <span className="text-[10px] font-semibold text-primary">Añadir foto</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleFotoChange}
+                    disabled={procesandoFoto}
+                  />
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

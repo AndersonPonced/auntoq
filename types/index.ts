@@ -28,6 +28,7 @@ export interface Producto {
   tiendaId: string;
   nombre: string;
   fotoUrl: string;
+  fotosUrls?: string[];
   precio: number;
   descripcion?: string;
   disponible: boolean;
