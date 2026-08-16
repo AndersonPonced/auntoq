@@ -30,10 +30,17 @@ export default function InstallBanner() {
       return;
     }
 
-    // Detect iOS
+    // Detect iOS and Mobile
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+    
     setIsIOS(isIosDevice);
+
+    if (!isMobileDevice) {
+      // Don't listen or show anything if not on a mobile device
+      return;
+    }
 
     const handler = (e: Event) => {
       e.preventDefault();
@@ -60,7 +67,7 @@ export default function InstallBanner() {
     setDismissed(true);
   };
 
-  // Show banner if: not installed, not dismissed, and either we have a prompt (Android) OR it's iOS
+  // Show banner if: not installed, not dismissed, not standalone, and either we have a prompt (Android) OR it's iOS
   const shouldShowBanner = !installed && !dismissed && !isStandalone && (prompt || isIOS);
 
   if (!shouldShowBanner) return null;
