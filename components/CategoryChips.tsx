@@ -18,42 +18,53 @@ export default function CategoryChips({
   counts,
 }: CategoryChipsProps) {
   return (
-    <div className="relative -mx-4 px-4 overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-4 before:bg-gradient-to-r before:from-[#FFF4F3] before:to-transparent before:z-10 after:absolute after:right-0 after:top-0 after:bottom-0 after:w-4 after:bg-gradient-to-l after:from-[#FFF4F3] after:to-transparent after:z-10">
+    <div className="relative -mx-4 px-4 overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-6 before:bg-gradient-to-r before:from-[#FFF4F3] before:to-transparent before:z-10 after:absolute after:right-0 after:top-0 after:bottom-0 after:w-6 after:bg-gradient-to-l after:from-[#FFF4F3] after:to-transparent after:z-10">
       <div
         role="group"
         aria-label="Filtrar por categoría"
-        className="flex gap-2.5 overflow-x-auto pb-2 pt-1 scrollbar-hide snap-x snap-mandatory touch-pan-x px-1"
+        className="flex gap-3 overflow-x-auto pb-4 pt-2 scrollbar-hide snap-x snap-mandatory touch-pan-x px-2"
       >
         {CATEGORIAS.map((cat) => {
           const isSelected = cat.slug === selected;
           const count = counts?.[cat.slug];
           
           const base =
-            'flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-[20px] text-[14px] font-bold transition-all duration-300 ease-out whitespace-nowrap cursor-pointer select-none border border-transparent';
+            'relative flex-shrink-0 flex flex-col items-center justify-center gap-2 w-[84px] h-[94px] rounded-[28px] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer select-none';
           
           const active = 
-            'bg-gradient-to-r from-[#FF6B35] to-[#FF8C61] text-white shadow-[0_6px_16px_rgba(255,107,53,0.35)] scale-[1.02] border-[#FF6B35]/20';
+            'bg-white shadow-[0_8px_20px_rgb(0,0,0,0.08)] scale-[1.05] z-10 ring-1 ring-[#E09C96]/30';
           
           const inactive =
-            'bg-white text-[#4E211E]/80 border-[#E09C96]/30 shadow-[0_2px_8px_rgb(0,0,0,0.02)] hover:shadow-[0_4px_12px_rgb(0,0,0,0.05)] hover:border-[#FF6B35]/30 hover:text-[#FF6B35] active:scale-95';
+            'bg-transparent hover:bg-white/60 active:scale-95';
 
           const label = (
             <>
-              <span 
-                className={`flex items-center justify-center w-7 h-7 rounded-full text-sm transition-colors duration-300 ${
-                  isSelected ? 'bg-white/20' : 'bg-[#FFF4F3]'
+              {/* Emoji Container */}
+              <div 
+                className={`flex items-center justify-center w-12 h-12 rounded-full text-2xl transition-all duration-500 ${
+                  isSelected 
+                    ? 'bg-[#FF6B35]/10 scale-110 shadow-inner' 
+                    : 'bg-white shadow-[0_2px_10px_rgb(0,0,0,0.04)] grayscale-[20%]'
                 }`}
                 aria-hidden="true"
               >
-                {cat.emoji}
+                <span className={`transform transition-transform duration-500 ${isSelected ? 'scale-110 -translate-y-0.5' : ''}`}>
+                  {cat.emoji}
+                </span>
+              </div>
+              
+              {/* Text */}
+              <span className={`text-[12px] font-bold tracking-tight transition-colors duration-500 ${isSelected ? 'text-[#4E211E]' : 'text-[#834C48]/70'}`}>
+                {cat.label}
               </span>
-              <span className="tracking-tight">{cat.label}</span>
-              {count !== undefined && (
+
+              {/* Badge */}
+              {count !== undefined && count > 0 && (
                 <span
-                  className={`text-[11px] font-extrabold rounded-full px-2 py-0.5 leading-none transition-colors duration-300 ${
+                  className={`absolute -top-1 -right-1 text-[10px] font-black rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1 shadow-sm transition-all duration-500 ${
                     isSelected
-                      ? 'bg-white text-[#FF6B35]'
-                      : 'bg-[#FF6B35]/10 text-[#FF6B35]'
+                      ? 'bg-[#FF6B35] text-white scale-100'
+                      : 'bg-white text-[#834C48] border border-[#E09C96]/30 scale-90'
                   }`}
                 >
                   {count}
