@@ -80,6 +80,15 @@ h1, h2, h3, h4, h5, h6 {
   animation: fade-up 0.35s ease both;
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out both;
+}
+
 @keyframes slide-up {
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
