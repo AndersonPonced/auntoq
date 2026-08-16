@@ -4,7 +4,7 @@
   "description": "Vecinos de Altos de Copacabana que venden desde su casa",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFF4F3",
+  "background_color": "#FFFFFF",
   "theme_color": "#FF6B35",
   "orientation": "portrait",
   "icons": [
