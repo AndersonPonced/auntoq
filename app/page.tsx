@@ -103,7 +103,7 @@ export default function HomePage() {
 
         <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto">
           <h1 className="font-headline font-bold text-3xl md:text-5xl leading-tight mb-2">
-            Auntoq'
+            Auntoke
           </h1>
           <p className="text-white/80 text-sm md:text-base mb-6 md:mb-8">
             Descubre los negocios de tu comunidad

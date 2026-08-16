@@ -51,7 +51,7 @@ export default function InstallBanner() {
           <span className="text-xl leading-none">👆</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-primary leading-tight">Instalar Auntoq&apos;</p>
+          <p className="text-sm font-semibold text-primary leading-tight">Instalar Auntoke</p>
           <p className="text-xs text-muted leading-tight mt-0.5">Agrégala a tu pantalla de inicio</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">

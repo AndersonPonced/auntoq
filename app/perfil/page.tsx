@@ -212,7 +212,7 @@ export default function PerfilPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <div className="absolute top-3 right-3">
-                <ShareButton title={tienda.nombre} text={`Mira el catálogo de ${tienda.nombre} en Auntoq'`} url={tiendaHref(tienda.id)} />
+                <ShareButton title={tienda.nombre} text={`Mira el catálogo de ${tienda.nombre} en Auntoke`} url={tiendaHref(tienda.id)} />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between gap-3">
                 <div className="min-w-0">

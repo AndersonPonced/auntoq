@@ -91,7 +91,7 @@ export default function TiendaContent({
           </Link>
           <ShareButton
             title={tienda.nombre}
-            text={`Mira el catálogo de ${tienda.nombre} en Auntoq' (Altos de Copacabana)`}
+            text={`Mira el catálogo de ${tienda.nombre} en Auntoke (Altos de Copacabana)`}
             url={tiendaHref(tienda.id)}
           />
         </div>
