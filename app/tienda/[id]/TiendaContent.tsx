@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
@@ -11,7 +11,6 @@ import EmptyState from '@/components/EmptyState';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import type { Tienda, Producto } from '@/types';
-import { createClient } from '@/lib/supabase/client';
 
 interface TiendaContentProps {
   tiendaInicial: Tienda | null;
@@ -29,14 +28,6 @@ export default function TiendaContent({
   const miTiendaLocal = useMiTienda();
   const misProductosLocal = useMisProductos();
   const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
-
-  useEffect(() => {
-    // Solo incrementar vistas si es una tienda real de Supabase y no la vista previa local
-    if (tiendaInicial?.id && !tiendaInicial.id.startsWith('local-')) {
-      const supabase = createClient();
-      supabase.rpc('increment_vistas', { tienda_id_param: tiendaInicial.id }).then();
-    }
-  }, [tiendaInicial?.id]);
 
   const tienda = tiendaInicial ?? miTiendaLocal;
   const productos = tiendaInicial
