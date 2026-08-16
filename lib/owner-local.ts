@@ -36,7 +36,7 @@ export interface TiendaInput {
 export interface ProductoInput {
   nombre: string;
   precio: number;
-  descripcion?: string;
+  descripcion?: string | null;
   disponible: boolean;
   /** Data URL from a photo the owner uploaded. Falls back to a placeholder when omitted. */
   fotoUrl?: string;

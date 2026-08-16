@@ -75,7 +75,7 @@ export default function ProductoForm({
       onSubmit({ 
         nombre: nombre.trim(), 
         precio: precioNum, 
-        descripcion: descripcion.trim() || undefined,
+        descripcion: descripcion.trim() || null,
         disponible, 
         fotosUrls,
         fotoUrl: fotosUrls[0] // Main image fallback
