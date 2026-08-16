@@ -81,16 +81,31 @@ export default function ProductoForm({
               <Image src={fotoUrl} alt="" fill sizes="64px" className="object-cover" />
             )}
           </div>
-          <label className="flex-1 cursor-pointer text-center px-3 py-2.5 rounded-[8px] border border-border text-sm font-semibold text-primary hover:bg-bg transition-colors">
-            {procesandoFoto ? 'Procesando…' : fotoUrl ? 'Cambiar foto' : 'Subir foto'}
-            <input
-              type="file"
-              accept="image/*"
-              className="sr-only"
-              onChange={handleFotoChange}
-              disabled={procesandoFoto}
-            />
-          </label>
+          <div className="flex-1 flex flex-col gap-2">
+            {procesandoFoto ? (
+              <div className="w-full text-center px-3 py-2.5 rounded-[8px] border border-border text-sm font-semibold text-muted">
+                Procesando…
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <label className="flex-1 cursor-pointer flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[8px] bg-brand/10 text-brand text-xs font-bold hover:bg-brand/20 transition-colors">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Tomar foto
+                  <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={handleFotoChange} />
+                </label>
+                <label className="flex-1 cursor-pointer flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[8px] border border-border text-primary text-xs font-bold hover:bg-bg transition-colors">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Galería
+                  <input type="file" accept="image/*" className="sr-only" onChange={handleFotoChange} />
+                </label>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
