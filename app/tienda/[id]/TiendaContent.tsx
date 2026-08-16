@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import ProductModal from '@/components/ProductModal';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ShareButton from '@/components/ShareButton';
 import EmptyState from '@/components/EmptyState';
@@ -25,6 +27,7 @@ export default function TiendaContent({
   // locally instead — used by the static /tienda/mi-tienda route.
   const miTiendaLocal = useMiTienda();
   const misProductosLocal = useMisProductos();
+  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
 
   const tienda = tiendaInicial ?? miTiendaLocal;
   const productos = tiendaInicial
@@ -57,6 +60,7 @@ export default function TiendaContent({
   const acento = getAcentoMeta(tienda.colorAcento);
 
   return (
+    <>
     <main className="pb-28 md:pb-16">
       {/* ── Hero banner ───────────────────────────────────────── */}
       <div
@@ -154,7 +158,14 @@ export default function TiendaContent({
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" role="list" aria-label="Productos">
               {productos.map((producto, i) => (
                 <div key={producto.id} role="listitem">
-                  <ProductCard producto={producto} index={i} />
+                  <button
+                    type="button"
+                    className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[16px]"
+                    onClick={() => setSelectedProduct(producto)}
+                    aria-label={`Ver detalle de ${producto.nombre}`}
+                  >
+                    <ProductCard producto={producto} index={i} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -169,5 +180,17 @@ export default function TiendaContent({
         </div>
       </div>
     </main>
+
+    {/* ── Product detail modal ── */}
+    {selectedProduct && (
+      <ProductModal
+        producto={selectedProduct}
+        storeName={tienda.nombre}
+        acento={acento}
+        whatsapp={tienda.whatsapp}
+        onClose={() => setSelectedProduct(null)}
+      />
+    )}
+  </>
   );
 }

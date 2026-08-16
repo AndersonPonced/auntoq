@@ -29,5 +29,6 @@ export interface Producto {
   nombre: string;
   fotoUrl: string;
   precio: number;
+  descripcion?: string;
   disponible: boolean;
 }
