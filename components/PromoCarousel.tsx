@@ -23,7 +23,7 @@ const PROMOS = [
   {
     id: 3,
     title: '¡Corre la voz! 📣',
-    subtitle: 'Comparte Auntoke con tus tiendas favoritas para que se unan a la comunidad.',
+    subtitle: 'Comparte Auntokke con tus tiendas favoritas para que se unan a la comunidad.',
     bgUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
     color: 'from-pink-500/90 to-rose-800/90',
     btnText: 'Compartir app',

@@ -89,7 +89,7 @@ export default function TiendaContent({
             </Link>
             <ShareButton
               title={tienda.nombre}
-              text={`Mira el catálogo de ${tienda.nombre} en Auntoke`}
+              text={`Mira el catálogo de ${tienda.nombre} en Auntokke`}
               url={tiendaHref(tienda.id)}
             />
           </div>

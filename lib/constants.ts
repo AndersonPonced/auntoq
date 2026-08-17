@@ -82,7 +82,7 @@ export function buildWhatsAppLink(whatsapp: string, storeName: string): string {
   // Si no empieza con el código de Venezuela (58), lo agregamos automáticamente
   const number = clean.startsWith('58') ? clean : `58${clean}`;
   const text = encodeURIComponent(
-    `Hola, vi el catálogo de ${storeName} en Auntoke (Altos de Copacabana) y quiero pedir: `,
+    `Hola, vi el catálogo de ${storeName} en Auntokke (Altos de Copacabana) y quiero pedir: `,
   );
   return `https://wa.me/${number}?text=${text}`;
 }

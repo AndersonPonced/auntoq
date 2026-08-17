@@ -77,10 +77,10 @@ export default function InstallBanner() {
       <div className="fixed bottom-4 left-0 right-0 z-40 mx-auto max-w-[400px] px-4 animate-slide-up">
         <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-border/50 rounded-2xl p-3 shadow-xl">
           <div className="flex-shrink-0 h-12 w-12 rounded-xl bg-white flex items-center justify-center shadow-sm border border-border p-1 overflow-hidden">
-            <Image src="/logo.png" alt="Auntoke Logo" width={40} height={40} className="object-contain" />
+            <Image src="/logo.png" alt="Auntokke Logo" width={40} height={40} className="object-contain" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-bold text-primary leading-tight">Instalar Auntoke</p>
+            <p className="text-[15px] font-bold text-primary leading-tight">Instalar Auntokke</p>
             <p className="text-xs text-muted leading-tight mt-0.5 font-medium">Usa la app rápido y sin gastar datos</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -108,11 +108,11 @@ export default function InstallBanner() {
           <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl animate-slide-up">
             <div className="flex justify-center mb-4">
               <div className="h-16 w-16 rounded-2xl bg-white flex items-center justify-center shadow-md border border-border p-2">
-                <Image src="/logo.png" alt="Auntoke Logo" width={56} height={56} className="object-contain" />
+                <Image src="/logo.png" alt="Auntokke Logo" width={56} height={56} className="object-contain" />
               </div>
             </div>
             <h3 className="text-xl font-black text-center text-primary mb-2">Instalar en tu iPhone</h3>
-            <p className="text-center text-muted mb-6 text-sm">Instala Auntoke en tu pantalla de inicio para acceso instantáneo.</p>
+            <p className="text-center text-muted mb-6 text-sm">Instala Auntokke en tu pantalla de inicio para acceso instantáneo.</p>
             
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-4 bg-surface p-4 rounded-2xl">

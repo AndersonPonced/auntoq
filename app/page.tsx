@@ -80,7 +80,7 @@ export default function HomePage() {
       {/* ── Desktop Sidebar ── */}
       <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#E09C96]/30 px-6 py-8">
         <div className="mb-8">
-          <h1 className="font-headline font-black text-[#FF6B35] text-3xl tracking-tighter">Auntoke</h1>
+          <h1 className="font-headline font-black text-[#FF6B35] text-3xl tracking-tighter">Auntokke</h1>
           <p className="text-[#834C48] text-sm mt-1">Altos de Copacabana</p>
         </div>
 

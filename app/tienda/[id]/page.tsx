@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: tienda.nombre,
     description:
       tienda.descripcion_corta ??
-      `Catálogo de ${tienda.nombre} en Auntoke — Altos de Copacabana`,
+      `Catálogo de ${tienda.nombre} en Auntokke — Altos de Copacabana`,
   };
 }
 

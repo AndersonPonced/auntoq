@@ -127,7 +127,7 @@ export default function SignupPage() {
               Crea tu cuenta
             </h1>
             <p className="text-[#834C48] text-[15px] md:text-base px-4">
-              Únete a Auntoke y empieza a conectar tu negocio con tus vecinos hoy mismo.
+              Únete a Auntokke y empieza a conectar tu negocio con tus vecinos hoy mismo.
             </p>
           </div>
 

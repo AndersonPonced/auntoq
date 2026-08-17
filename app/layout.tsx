@@ -16,24 +16,24 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Auntoke — Altos de Copacabana",
-    template: "%s | Auntoke",
+    default: "Auntokke — Altos de Copacabana",
+    template: "%s | Auntokke",
   },
   description:
-    "Descubre los vecinos de Altos de Copacabana que venden desde su casa. Comida, ropa, ferretería, repostería y más — todo en Auntoke de WhatsApp.",
+    "Descubre los vecinos de Altos de Copacabana que venden desde su casa. Comida, ropa, ferretería, repostería y más — todo en Auntokke de WhatsApp.",
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: "Auntoke",
+    title: "Auntokke",
   },
   formatDetection: { telephone: false },
   openGraph: {
     type: 'website',
-    siteName: "Auntoke",
-    title: "Auntoke — Altos de Copacabana",
+    siteName: "Auntokke",
+    title: "Auntokke — Altos de Copacabana",
     description:
-      "Vecinos de Altos de Copacabana que venden desde su casa. Todo en Auntoke de WhatsApp.",
+      "Vecinos de Altos de Copacabana que venden desde su casa. Todo en Auntokke de WhatsApp.",
   },
 };
 

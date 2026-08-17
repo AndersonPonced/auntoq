@@ -28,7 +28,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-6 border-t border-[#E09C96]/20 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[#834C48]/70 text-[11px] md:text-xs font-medium">
-            © {new Date().getFullYear()} Auntoke. Todos los derechos reservados.
+            © {new Date().getFullYear()} Auntokke. Todos los derechos reservados.
           </p>
           
           <div className="flex items-center gap-5 text-[11px] md:text-xs font-semibold text-[#834C48]/70">

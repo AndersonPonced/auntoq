@@ -33,7 +33,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
   const clean = whatsapp.replace(/[\s\-\(\)\+]/g, '');
   const number = clean.startsWith('58') ? clean : `58${clean}`;
   const msg = encodeURIComponent(
-    `Hola, vi el catálogo de ${storeName} en Auntoke y quiero pedir:\n\n*${producto.nombre}* - ${formatPrice(producto.precio)}\n\n`
+    `Hola, vi el catálogo de ${storeName} en Auntokke y quiero pedir:\n\n*${producto.nombre}* - ${formatPrice(producto.precio)}\n\n`
   );
   const waLink = `https://wa.me/${number}?text=${msg}`;
 
