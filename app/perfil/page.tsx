@@ -56,6 +56,7 @@ export default function PerfilPage() {
           descripcionCorta: data.descripcion_corta,
           ubicacion: data.ubicacion,
           horario: data.horario,
+          whatsapp: data.whatsapp ?? '',
           fotoPortadaUrl: data.foto_portada_url,
           colorAcento: data.color_acento,
           activa: true,

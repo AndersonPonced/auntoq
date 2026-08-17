@@ -76,6 +76,7 @@ export function formatPrice(price: number): string {
 }
 
 export function buildWhatsAppLink(whatsapp: string, storeName: string): string {
+  if (!whatsapp) return '#';
   // Limpiar el número: quitar espacios, guiones, paréntesis y el símbolo +
   const clean = whatsapp.replace(/[\s\-\(\)\+]/g, '');
   // Si no empieza con el código de Venezuela (58), lo agregamos automáticamente
