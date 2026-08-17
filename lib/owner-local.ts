@@ -181,7 +181,7 @@ export function addMiProducto(tiendaId: string, input: ProductoInput): Producto 
     fotoUrl: mainFotoUrl,
     fotosUrls,
     precio: input.precio,
-    descripcion: input.descripcion,
+    descripcion: input.descripcion ?? undefined,
     disponible: input.disponible,
   };
   setMisProductos([...getMisProductos(), nuevo]);
@@ -198,7 +198,7 @@ export function updateMiProducto(id: string, input: ProductoInput): void {
         ...p,
         nombre: input.nombre,
         precio: input.precio,
-        descripcion: input.descripcion,
+        descripcion: input.descripcion ?? undefined,
         disponible: input.disponible,
         fotoUrl: mainFotoUrl,
         fotosUrls,
