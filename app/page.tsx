@@ -12,6 +12,7 @@ import { getSession, signOut, type Usuario } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/client';
 import InstallBanner from '@/components/InstallBanner';
 import Footer from '@/components/Footer';
+import PromoCarousel from '@/components/PromoCarousel';
 
 export default function HomePage() {
   const router = useRouter();
@@ -137,8 +138,13 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* ── Carrusel de Promociones (Impresionante) ── */}
+      <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto pt-2">
+        <PromoCarousel />
+      </div>
+
       {/* ── Categorías ── */}
-      <div className="bg-bg border-b border-border">
+      <div className="bg-bg border-b border-border mt-2">
         <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-3">
           <CategoryChips selected={selected} onChange={setSelected} counts={counts} />
         </div>
