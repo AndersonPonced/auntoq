@@ -8,6 +8,7 @@ import ProductModal from '@/components/ProductModal';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ShareButton from '@/components/ShareButton';
 import EmptyState from '@/components/EmptyState';
+import Footer from '@/components/Footer';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import type { Tienda, Producto } from '@/types';
@@ -173,12 +174,13 @@ export default function TiendaContent({
         </section>
       </div>
 
-      {/* ── Sticky WhatsApp CTA (mobile only) ────────────────── */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-md border-t border-border md:hidden">
         <div className="max-w-[480px] mx-auto px-4 py-3">
           <WhatsAppButton whatsapp={tienda.whatsapp} storeName={tienda.nombre} />
         </div>
       </div>
+
+      <Footer />
     </main>
 
     {/* ── Product detail modal ── */}

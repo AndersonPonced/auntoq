@@ -11,6 +11,7 @@ import type { Categoria } from '@/types';
 import { getSession, signOut, type Usuario } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/client';
 import InstallBanner from '@/components/InstallBanner';
+import Footer from '@/components/Footer';
 
 export default function HomePage() {
   const router = useRouter();
@@ -144,6 +145,9 @@ export default function HomePage() {
           </ul>
         )}
       </div>
+
+      {/* ── Footer ── */}
+      <Footer />
     </main>
   );
 }
