@@ -142,7 +142,7 @@ export default function HomePage() {
             description={query ? `No encontramos tiendas con "${query}".` : 'Sé el primero en registrar tu negocio.'}
           />
         ) : (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 list-none p-0" role="list">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 list-none p-0" role="list">
             {tiendadFiltradas.map((t, i) => (
               <li key={t.id}>
                 <StoreCard tienda={t} index={i} />
