@@ -3,7 +3,22 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
-const PROMOS = [
+interface Promo {
+  id: number;
+  title: string;
+  subtitle: string;
+  bgUrl: string;
+  color: string;
+  btnText: string;
+  /** When true, the image is a finished ad graphic — shown whole (no crop/overlay/text). */
+  fullImage?: boolean;
+  /** Letterbox background behind a full-image slide, matching the art's own bg. */
+  bgColor?: string;
+  /** When set, the whole card links out to this URL in a new tab. */
+  href?: string;
+}
+
+const PROMOS: Promo[] = [
   {
     id: 1,
     title: 'Apoya lo local 🤝',
@@ -14,6 +29,17 @@ const PROMOS = [
   },
   {
     id: 2,
+    title: 'Tus pagos, ahora son arte IA',
+    subtitle: 'Diseños premium únicos para tu Pago Móvil, generados por IA en segundos',
+    bgUrl: '/promo-pagocool.jpg',
+    color: '',
+    btnText: '',
+    fullImage: true,
+    bgColor: '#0b1530',
+    href: 'https://pagocool.com',
+  },
+  {
+    id: 3,
     title: '¿Tienes un negocio? 🚀',
     subtitle: 'Regístralo gratis y llega a más vecinos hoy mismo',
     bgUrl: 'https://images.unsplash.com/photo-1581166397057-235af2b3c6dd?q=80&w=800&auto=format&fit=crop',
@@ -21,7 +47,7 @@ const PROMOS = [
     btnText: 'Crear mi tienda',
   },
   {
-    id: 3,
+    id: 4,
     title: '¡Corre la voz! 📣',
     subtitle: 'Comparte Auntokke con tus tiendas favoritas para que se unan a la comunidad.',
     bgUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
@@ -59,36 +85,60 @@ export default function PromoCarousel() {
         className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 px-4 gap-4"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {PROMOS.map((promo, idx) => (
-          <div
-            key={promo.id}
-            className={`relative flex-shrink-0 w-full sm:w-[85%] md:w-[70%] h-40 md:h-48 rounded-[24px] overflow-hidden snap-center shadow-lg transition-transform duration-500 ${
-              currentIndex === idx ? 'scale-100' : 'scale-[0.97] opacity-80'
-            }`}
-          >
-            <Image
-              src={promo.bgUrl}
-              alt={promo.title}
-              fill
-              className="object-cover"
-            />
-            <div className={`absolute inset-0 bg-gradient-to-r ${promo.color}`} />
-            
-            <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-center">
-              <h3 className="text-white font-headline font-black text-2xl md:text-3xl leading-tight mb-1 animate-fade-up">
-                {promo.title}
-              </h3>
-              <p className="text-white/90 text-sm md:text-base font-medium max-w-[80%] animate-fade-up" style={{ animationDelay: '0.1s' }}>
-                {promo.subtitle}
-              </p>
-              <div className="mt-4">
-                <span className="inline-block bg-white text-[#0E2A52] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '0.2s' }}>
-                  {promo.btnText}
-                </span>
-              </div>
+        {PROMOS.map((promo, idx) => {
+          const cardClassName = `relative flex-shrink-0 w-full sm:w-[85%] md:w-[70%] h-40 md:h-48 rounded-[24px] overflow-hidden snap-center shadow-lg transition-transform duration-500 ${
+            currentIndex === idx ? 'scale-100' : 'scale-[0.97] opacity-80'
+          }`;
+          const cardStyle = promo.fullImage ? { backgroundColor: promo.bgColor } : undefined;
+
+          const cardContent = (
+            <>
+              <Image
+                src={promo.bgUrl}
+                alt={promo.title}
+                fill
+                className={promo.fullImage ? 'object-contain' : 'object-cover'}
+              />
+              {!promo.fullImage && (
+                <>
+                  <div className={`absolute inset-0 bg-gradient-to-r ${promo.color}`} />
+
+                  <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-center">
+                    <h3 className="text-white font-headline font-black text-2xl md:text-3xl leading-tight mb-1 animate-fade-up">
+                      {promo.title}
+                    </h3>
+                    <p className="text-white/90 text-sm md:text-base font-medium max-w-[80%] animate-fade-up" style={{ animationDelay: '0.1s' }}>
+                      {promo.subtitle}
+                    </p>
+                    <div className="mt-4">
+                      <span className="inline-block bg-white text-[#0E2A52] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                        {promo.btnText}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          );
+
+          return promo.href ? (
+            <a
+              key={promo.id}
+              href={promo.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={promo.title}
+              className={cardClassName}
+              style={cardStyle}
+            >
+              {cardContent}
+            </a>
+          ) : (
+            <div key={promo.id} className={cardClassName} style={cardStyle}>
+              {cardContent}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       
       {/* Pagination Dots */}
