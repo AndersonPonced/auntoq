@@ -17,7 +17,7 @@ export default function StoreCard({ tienda, index = 0, interactive = true }: Sto
   // Fallback description if the store didn't provide one
   const description =
     tienda.descripcionCorta ??
-    `Tienda de ${cat.label.toLowerCase()} en ${tienda.ubicacion.split(',')[0]}`;
+    `Tienda de ${cat.label.toLowerCase()}`;
 
   const content = (
     <>
@@ -58,13 +58,6 @@ export default function StoreCard({ tienda, index = 0, interactive = true }: Sto
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="text-[#4E211E]">{tienda.horario}</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="h-3.5 w-3.5 text-[#E09C96]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span className="truncate max-w-[140px]">{tienda.ubicacion}</span>
           </span>
         </div>
       </div>
