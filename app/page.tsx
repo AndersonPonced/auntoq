@@ -84,21 +84,6 @@ export default function HomePage() {
           <p className="text-[#834C48] text-sm mt-1">Altos de Copacabana</p>
         </div>
 
-        {/* Location selector */}
-        <div className="mb-8 p-4 bg-[#FFF4F3] rounded-2xl border border-[#E09C96]/20">
-          <span className="text-[11px] font-bold text-[#FF6B35] uppercase tracking-wide">
-            Entregar en
-          </span>
-          <button className="flex items-center gap-1.5 text-left group w-full mt-1">
-            <span className="font-headline font-black text-[#4E211E] text-base truncate group-hover:text-[#FF6B35] transition-colors">
-              Mi Ubicación Actual
-            </span>
-            <svg className="h-4 w-4 text-[#FF6B35] flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-
         {/* Vertical Categories */}
         <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
           <h2 className="font-headline font-bold text-[#4E211E] text-lg mb-4">Categorías</h2>
@@ -139,17 +124,7 @@ export default function HomePage() {
         <header className="lg:hidden bg-white px-4 pt-6 pb-2 border-b border-[#E09C96]/20">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[11px] font-bold text-[#FF6B35] uppercase tracking-wide">
-                Entregar en
-              </span>
-              <button className="flex items-center gap-1.5 text-left group">
-                <span className="font-headline font-black text-[#4E211E] text-base truncate group-hover:text-[#FF6B35] transition-colors">
-                  Altos de Copacabana
-                </span>
-                <svg className="h-4 w-4 text-[#FF6B35] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              <span className="font-headline font-black text-[#FF6B35] text-xl tracking-tighter">Auntoke</span>
             </div>
             {/* User / Store Actions (Mobile) */}
             <div className="flex items-center gap-2 flex-shrink-0">

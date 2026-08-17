@@ -133,19 +133,6 @@ export default function TiendaContent({
                     <span className="text-[13px] font-semibold text-[#4E211E]">{tienda.horario}</span>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-3 bg-[#FFF4F3] p-3 rounded-[16px] border border-[#E09C96]/30">
-                  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm text-brand">
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] font-bold text-[#E09C96] uppercase tracking-wider">Ubicación</span>
-                    <span className="text-[13px] font-semibold text-[#4E211E]">{tienda.ubicacion}</span>
-                  </div>
-                </div>
               </div>
 
               <div className="hidden md:block">
