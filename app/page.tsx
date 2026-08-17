@@ -74,41 +74,59 @@ export default function HomePage() {
 
   return (
     <main>
-      {/* ── Hero header ── */}
-      <header className="relative bg-gradient-to-br from-brand to-brand-dark text-white px-4 pt-12 pb-8 md:pt-16 md:pb-14">
-        <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2">
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs md:text-sm font-medium opacity-90 hidden sm:inline-block">
-                {user.nombre_completo || user.email}
+      {/* ── App Header (Yummy style) ── */}
+      <header className="bg-bg px-4 pt-6 pb-2">
+        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto flex items-center justify-between gap-4">
+          
+          {/* Location mock */}
+          <div className="flex flex-col flex-1 min-w-0">
+            <span className="text-[11px] font-bold text-[#FF6B35] uppercase tracking-wide">
+              Entregar en
+            </span>
+            <button className="flex items-center gap-1.5 text-left group">
+              <span className="font-headline font-black text-[#4E211E] text-base md:text-lg truncate group-hover:text-[#FF6B35] transition-colors">
+                Altos de Copacabana
               </span>
+              <svg className="h-4 w-4 text-[#FF6B35] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* User / Store Actions */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Link 
+              href="/perfil" 
+              aria-label="Mi tienda" 
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-[#4E211E] hover:bg-[#FFF4F3] hover:text-[#FF6B35] transition-all"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
+
+            {user ? (
               <button
                 onClick={() => { signOut(); setUser(null); }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/10 hover:bg-red-500/80 backdrop-blur-sm transition-colors text-xs md:text-sm font-semibold"
+                aria-label="Cerrar sesión"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all"
               >
-                Salir
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
               </button>
-            </div>
-          ) : (
-            <Link href="/login" className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm transition-colors text-xs md:text-sm font-semibold">
-              Iniciar Sesión
-            </Link>
-          )}
-          <Link href="/perfil" aria-label="Mi tienda" className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm transition-colors text-xs md:text-sm font-semibold">
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Mi tienda
-          </Link>
-        </div>
-
-        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto">
-          <h1 className="font-headline font-bold text-3xl md:text-5xl leading-tight mb-2">
-            Auntoke
-          </h1>
-          <p className="text-white/80 text-sm md:text-base mb-2 md:mb-4">
-            Descubre los negocios de tu comunidad
-          </p>
+            ) : (
+              <Link 
+                href="/login" 
+                aria-label="Iniciar Sesión"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FF6B35] text-white shadow-md hover:bg-[#A63300] transition-colors"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
