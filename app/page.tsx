@@ -75,7 +75,7 @@ export default function HomePage() {
   }, {});
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       
       {/* ── Desktop Sidebar ── */}
       <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#A9CFEA]/30 px-6 py-8">
@@ -171,7 +171,7 @@ export default function HomePage() {
 
         {/* ── Top Bar (Desktop & Mobile) ── */}
         <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md shadow-sm border-b border-[#A9CFEA]/20">
-          <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
+          <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
             <div className="flex-1 max-w-2xl">
               <SearchBar defaultValue={query} onSearch={setQuery} />
             </div>
@@ -195,7 +195,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col w-full max-w-[1440px] mx-auto">
           {/* ── Carrusel de Promociones ── */}
           <div className="w-full pt-4 lg:pt-6 lg:px-8">
             <PromoCarousel />
