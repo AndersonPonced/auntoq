@@ -106,15 +106,21 @@ export default function HomePage() {
           <h1 className="font-headline font-bold text-3xl md:text-5xl leading-tight mb-2">
             Auntoke
           </h1>
-          <p className="text-white/80 text-sm md:text-base mb-6 md:mb-8">
+          <p className="text-white/80 text-sm md:text-base mb-2 md:mb-4">
             Descubre los negocios de tu comunidad
           </p>
-          <SearchBar defaultValue={query} onSearch={setQuery} />
         </div>
       </header>
 
+      {/* ── Buscador Sticky ── */}
+      <div className="sticky top-0 z-20 bg-bg shadow-sm border-b border-[#E09C96]/30">
+        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-3">
+          <SearchBar defaultValue={query} onSearch={setQuery} />
+        </div>
+      </div>
+
       {/* ── Categorías ── */}
-      <div className="sticky top-0 z-10 bg-bg border-b border-border">
+      <div className="bg-bg border-b border-border">
         <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-3">
           <CategoryChips selected={selected} onChange={setSelected} counts={counts} />
         </div>
