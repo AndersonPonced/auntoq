@@ -173,7 +173,7 @@ export default function PerfilPage() {
   return (
     <main className="pb-16">
       <header className="app-header">
-        <div className="max-w-[480px] md:max-w-2xl mx-auto px-4 md:px-6 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 flex items-center gap-3">
           <Link href="/" aria-label="Volver al inicio" className="p-2 -ml-2 rounded-full hover:bg-brand/10 transition-colors">
             <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -183,7 +183,7 @@ export default function PerfilPage() {
         </div>
       </header>
 
-      <div className="max-w-[480px] md:max-w-2xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6">
         {!tienda ? (
           <div className="flex flex-col items-center text-center px-4 py-16 mt-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#E09C96]/30">
             <div className="w-20 h-20 bg-[#FFF4F3] text-[#FF6B35] rounded-full flex items-center justify-center mb-6 shadow-inner">
@@ -278,10 +278,10 @@ export default function PerfilPage() {
               )}
 
               {!agregandoProducto && productos.length > 0 && (
-                <ul className="grid grid-cols-2 md:grid-cols-3 gap-3 list-none p-0" role="list">
+                <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5 list-none p-0" role="list">
                   {productos.map((p, i) =>
                     editandoProductoId === p.id ? (
-                      <li key={p.id} className="col-span-2 md:col-span-3">
+                      <li key={p.id} className="col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5">
                         <ProductoForm initialValues={p} submitLabel="Guardar" onCancel={() => setEditandoProductoId(null)} onSubmit={(values) => handleActualizarProducto(p.id, values)} />
                       </li>
                     ) : confirmandoEliminarId === p.id ? (

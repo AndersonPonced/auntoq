@@ -77,7 +77,7 @@ export default function HomePage() {
     <main>
       {/* ── App Header (Yummy style) ── */}
       <header className="bg-bg px-4 pt-6 pb-2">
-        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
           {/* Location mock */}
           <div className="flex flex-col flex-1 min-w-0">
@@ -133,19 +133,19 @@ export default function HomePage() {
 
       {/* ── Buscador Sticky ── */}
       <div className="sticky top-0 z-20 bg-bg shadow-sm border-b border-[#E09C96]/30">
-        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-3">
+        <div className="max-w-7xl mx-auto px-4 py-3">
           <SearchBar defaultValue={query} onSearch={setQuery} />
         </div>
       </div>
 
       {/* ── Carrusel de Promociones (Impresionante) ── */}
-      <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto pt-2">
+      <div className="max-w-7xl mx-auto pt-2">
         <PromoCarousel />
       </div>
 
       {/* ── Categorías ── */}
       <div className="bg-bg border-b border-border mt-2">
-        <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-3">
+        <div className="max-w-7xl mx-auto px-4 py-3">
           <CategoryChips selected={selected} onChange={setSelected} counts={counts} />
         </div>
       </div>
@@ -154,7 +154,7 @@ export default function HomePage() {
       <InstallBanner />
 
       {/* ── Tiendas ── */}
-      <div className="max-w-[480px] md:max-w-2xl lg:max-w-3xl mx-auto px-4 py-6 md:py-10">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin h-8 w-8 text-brand rounded-full border-4 border-current border-t-transparent" />
@@ -166,7 +166,7 @@ export default function HomePage() {
             description={query ? `No encontramos tiendas con "${query}".` : 'Sé el primero en registrar tu negocio.'}
           />
         ) : (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 list-none p-0" role="list">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 list-none p-0" role="list">
             {tiendadFiltradas.map((t, i) => (
               <li key={t.id}>
                 <StoreCard tienda={t} index={i} />

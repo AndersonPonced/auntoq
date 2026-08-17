@@ -64,7 +64,7 @@ export default function TiendaContent({
     <>
     <main className="pb-28 md:pb-16">
       {/* ── Hero banner ───────────────────────────────────────── */}
-      <div className="relative w-full aspect-[4/3] md:aspect-[21/9] max-w-[768px] mx-auto bg-[#FFE4D6] md:rounded-b-[32px] overflow-hidden shadow-sm">
+      <div className="relative w-full aspect-[4/3] md:aspect-[21/9] max-w-5xl mx-auto bg-[#FFE4D6] md:rounded-b-[32px] overflow-hidden shadow-sm">
         <Image
           src={tienda.fotoPortadaUrl}
           alt={`Foto de portada de ${tienda.nombre}`}
@@ -77,7 +77,7 @@ export default function TiendaContent({
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/20" />
 
         {/* Top row: back button + share */}
-        <div className="absolute top-4 left-4 right-4 flex justify-between items-center max-w-[768px] mx-auto">
+        <div className="absolute top-4 left-4 right-4 flex justify-between items-center max-w-5xl mx-auto">
           <Link
             href="/"
             aria-label="Volver al inicio"
@@ -96,7 +96,7 @@ export default function TiendaContent({
       </div>
 
       {/* ── Store info + catalog ── */}
-      <div className="relative z-10 -mt-12 md:-mt-16 max-w-[768px] mx-auto bg-white rounded-t-[32px] md:rounded-[32px] px-5 md:px-8 pt-6 md:pt-8 pb-5 shadow-[0_-8px_30px_rgb(0,0,0,0.08)] md:shadow-[0_12px_40px_rgb(0,0,0,0.08)]">
+      <div className="relative z-10 -mt-12 md:-mt-16 max-w-5xl mx-auto bg-white rounded-t-[32px] md:rounded-[32px] px-5 md:px-8 pt-6 md:pt-8 pb-5 shadow-[0_-8px_30px_rgb(0,0,0,0.08)] md:shadow-[0_12px_40px_rgb(0,0,0,0.08)]">
         
         {/* Category chip */}
         <div className="flex items-center justify-between mb-3">
@@ -167,7 +167,7 @@ export default function TiendaContent({
               description="Esta tienda aún no ha añadido productos."
             />
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4" role="list" aria-label="Productos">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5" role="list" aria-label="Productos">
               {productos.map((producto, i) => (
                 <div key={producto.id} role="listitem">
                   <button
