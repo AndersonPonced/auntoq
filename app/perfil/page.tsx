@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AppLogo from '@/components/AppLogo';
 import ProductCard from '@/components/ProductCard';
+import ProductModal from '@/components/ProductModal';
 import ShareButton from '@/components/ShareButton';
 import TiendaForm from '@/components/TiendaForm';
 import ProductoForm from '@/components/ProductoForm';
@@ -27,6 +28,7 @@ export default function PerfilPage() {
   const [confirmandoEliminarId, setConfirmandoEliminarId] = useState<string | null>(null);
   const [confirmandoEliminarTienda, setConfirmandoEliminarTienda] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
   useEffect(() => {
     if (!toast) return;
@@ -290,7 +292,14 @@ export default function PerfilPage() {
                       </li>
                     ) : (
                       <li key={p.id}>
-                        <ProductCard producto={p} index={i} onEdit={() => setEditandoProductoId(p.id)} onDelete={() => setConfirmandoEliminarId(p.id)} />
+                        <button
+                          type="button"
+                          className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[20px]"
+                          onClick={() => setSelectedProduct(p)}
+                          aria-label={`Ver detalle de ${p.nombre}`}
+                        >
+                          <ProductCard producto={p} index={i} onEdit={() => setEditandoProductoId(p.id)} onDelete={() => setConfirmandoEliminarId(p.id)} />
+                        </button>
                       </li>
                     )
                   )}
@@ -329,6 +338,16 @@ export default function PerfilPage() {
         <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-primary text-white text-sm font-medium px-4 py-2.5 rounded-full shadow-lg animate-fade-up">
           {toast}
         </div>
+      )}
+
+      {selectedProduct && tienda && (
+        <ProductModal
+          producto={selectedProduct}
+          storeName={tienda.nombre}
+          acento={getAcentoMeta(tienda.colorAcento)}
+          whatsapp={tienda.whatsapp}
+          onClose={() => setSelectedProduct(null)}
+        />
       )}
     </main>
   );
