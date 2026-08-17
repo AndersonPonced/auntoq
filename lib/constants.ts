@@ -45,10 +45,10 @@ export interface AcentoMeta {
 }
 
 export const ACENTOS: AcentoMeta[] = [
-  { key: 'naranja', label: 'Naranja', base: '#FF6B35', dark: '#A63300' },
+  { key: 'azul', label: 'Azul', base: '#1D5FCC', dark: '#0E2A52' },
+  { key: 'naranja', label: 'Naranja', base: '#F3781E', dark: '#B85A12' },
   { key: 'rosa', label: 'Rosa', base: '#E0527B', dark: '#99235A' },
   { key: 'salvia', label: 'Salvia', base: '#4B8B6F', dark: '#2F5C48' },
-  { key: 'azul', label: 'Azul', base: '#3A7CA5', dark: '#1F4E68' },
   { key: 'morado', label: 'Morado', base: '#8859A3', dark: '#5A3971' },
   { key: 'mostaza', label: 'Mostaza', base: '#C98A1D', dark: '#7A5310' },
 ];

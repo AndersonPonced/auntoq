@@ -95,7 +95,7 @@ export default function ProductoForm({
         
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {fotosUrls.map((url, idx) => (
-            <div key={url} className="relative aspect-square rounded-[8px] overflow-hidden bg-[#FFE4D6] border border-border group">
+            <div key={url} className="relative aspect-square rounded-[8px] overflow-hidden bg-[#C7E7F7] border border-border group">
               <Image src={url} alt={`Foto ${idx + 1}`} fill sizes="100px" className="object-cover" />
               <button
                 type="button"

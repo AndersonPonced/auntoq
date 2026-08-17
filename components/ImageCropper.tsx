@@ -179,20 +179,20 @@ function CropperModal({ rawSrc, crop, zoom, aspect, onCropChange, onZoomChange, 
           Cancelar
         </button>
         <span className="text-white font-semibold text-sm">Ajustar imagen</span>
-        <button type="button" onClick={onConfirm} disabled={uploading} className="text-[#FF6B35] hover:text-[#FF8C55] font-bold text-sm transition-colors disabled:opacity-50 flex items-center gap-1.5">
+        <button type="button" onClick={onConfirm} disabled={uploading} className="text-[#1D5FCC] hover:text-[#4C86E0] font-bold text-sm transition-colors disabled:opacity-50 flex items-center gap-1.5">
           {uploading
             ? <><svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Subiendo...</>
             : 'Usar foto'}
         </button>
       </div>
       <div className="relative flex-1">
-        <Cropper image={rawSrc} crop={crop} zoom={zoom} aspect={aspect} onCropChange={onCropChange} onZoomChange={onZoomChange} onCropComplete={onCropComplete} showGrid style={{ containerStyle: { background: '#000' }, cropAreaStyle: { borderColor: '#FF6B35', borderWidth: 2 } }} />
+        <Cropper image={rawSrc} crop={crop} zoom={zoom} aspect={aspect} onCropChange={onCropChange} onZoomChange={onZoomChange} onCropComplete={onCropComplete} showGrid style={{ containerStyle: { background: '#000' }, cropAreaStyle: { borderColor: '#1D5FCC', borderWidth: 2 } }} />
       </div>
       <div className="px-6 py-5 bg-black/80 backdrop-blur-sm shrink-0">
         {error && <p className="text-red-400 text-xs text-center mb-3">{error}</p>}
         <div className="flex items-center gap-3 max-w-sm mx-auto">
           <svg className="w-4 h-4 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
-          <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => onZoomChange(Number(e.target.value))} className="flex-1 accent-[#FF6B35]" aria-label="Zoom"/>
+          <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => onZoomChange(Number(e.target.value))} className="flex-1 accent-[#1D5FCC]" aria-label="Zoom"/>
           <svg className="w-5 h-5 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10h-6"/></svg>
         </div>
         <p className="text-center text-white/40 text-xs mt-2">Arrastra para encuadrar · Desliza para hacer zoom</p>

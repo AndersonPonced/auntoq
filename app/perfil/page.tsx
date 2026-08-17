@@ -167,8 +167,8 @@ export default function PerfilPage() {
 
   if (loading) {
     return (
-      <main className="min-h-[100dvh] bg-[#FFF4F3] flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 text-[#FF6B35] rounded-full border-4 border-current border-t-transparent"></div>
+      <main className="min-h-[100dvh] bg-[#D6EFFB] flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 text-[#1D5FCC] rounded-full border-4 border-current border-t-transparent"></div>
       </main>
     );
   }
@@ -188,17 +188,17 @@ export default function PerfilPage() {
 
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6">
         {!tienda ? (
-          <div className="flex flex-col items-center text-center px-4 py-16 mt-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#E09C96]/30">
-            <div className="w-20 h-20 bg-[#FFF4F3] text-[#FF6B35] rounded-full flex items-center justify-center mb-6 shadow-inner">
+          <div className="flex flex-col items-center text-center px-4 py-16 mt-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#A9CFEA]/30">
+            <div className="w-20 h-20 bg-[#D6EFFB] text-[#1D5FCC] rounded-full flex items-center justify-center mb-6 shadow-inner">
               <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
               </svg>
             </div>
-            <h1 className="font-headline font-bold text-[#4E211E] text-2xl md:text-3xl mb-3">¡Abre tu tienda hoy!</h1>
-            <p className="text-[#834C48] text-sm md:text-base leading-relaxed mb-8 max-w-sm">
+            <h1 className="font-headline font-bold text-[#0E2A52] text-2xl md:text-3xl mb-3">¡Abre tu tienda hoy!</h1>
+            <p className="text-[#4C6B8F] text-sm md:text-base leading-relaxed mb-8 max-w-sm">
               Tu cuenta está lista. El siguiente paso es configurar el perfil de tu negocio.
             </p>
-            <Link href="/registro" className="w-full sm:w-auto px-8 py-3.5 bg-[#FF6B35] hover:bg-[#A63300] text-white font-bold rounded-2xl shadow-[0_8px_20px_rgba(255,107,53,0.25)] transition-all active:scale-[0.98]">
+            <Link href="/registro" className="w-full sm:w-auto px-8 py-3.5 bg-[#1D5FCC] hover:bg-[#0E2A52] text-white font-bold rounded-2xl shadow-[0_8px_20px_rgba(29,95,204,0.25)] transition-all active:scale-[0.98]">
               Crear perfil de mi tienda
             </Link>
           </div>
@@ -215,7 +215,7 @@ export default function PerfilPage() {
         ) : (
           <>
             {/* ── Hero portada ── */}
-            <div className="relative w-full aspect-[16/9] rounded-[16px] overflow-hidden bg-[#FFE4D6] border-2" style={{ borderColor: acento?.base }}>
+            <div className="relative w-full aspect-[16/9] rounded-[16px] overflow-hidden bg-[#C7E7F7] border-2" style={{ borderColor: acento?.base }}>
               <Image
                 src={tienda.fotoPortadaUrl}
                 alt={`Foto de portada de ${tienda.nombre}`}

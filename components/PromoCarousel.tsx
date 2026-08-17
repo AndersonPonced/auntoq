@@ -82,7 +82,7 @@ export default function PromoCarousel() {
                 {promo.subtitle}
               </p>
               <div className="mt-4">
-                <span className="inline-block bg-white text-[#4E211E] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                <span className="inline-block bg-white text-[#0E2A52] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '0.2s' }}>
                   {promo.btnText}
                 </span>
               </div>
@@ -98,7 +98,7 @@ export default function PromoCarousel() {
             key={idx}
             onClick={() => setCurrentIndex(idx)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              currentIndex === idx ? 'w-6 bg-[#FF6B35]' : 'w-2 bg-[#E09C96]/50'
+              currentIndex === idx ? 'w-6 bg-[#1D5FCC]' : 'w-2 bg-[#A9CFEA]/50'
             }`}
             aria-label={`Ir a promoción ${idx + 1}`}
           />

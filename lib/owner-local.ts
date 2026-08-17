@@ -29,7 +29,7 @@ export interface TiendaInput {
   whatsapp: string;
   /** Data URL from a photo the owner uploaded. Falls back to the existing/placeholder photo when omitted. */
   fotoPortadaUrl?: string;
-  /** Key from lib/constants.ts#ACENTOS. Falls back to 'naranja' when omitted. */
+  /** Key from lib/constants.ts#ACENTOS. Falls back to 'azul' (brand default) when omitted. */
   colorAcento?: string;
 }
 
@@ -124,7 +124,7 @@ export function saveMiTienda(input: TiendaInput): Tienda {
     horario: input.horario,
     whatsapp: input.whatsapp,
     activa: true,
-    colorAcento: input.colorAcento ?? existing?.colorAcento ?? 'naranja',
+    colorAcento: input.colorAcento ?? existing?.colorAcento ?? 'azul',
   };
   safeSetItem(STORAGE_KEY, JSON.stringify(tienda));
   emitChange();

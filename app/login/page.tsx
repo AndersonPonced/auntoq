@@ -21,10 +21,10 @@ function AnimatedInput({
       className={`relative animate-fade-up ${className}`} 
       style={{ animationDelay: delay, animationFillMode: 'both' }}
     >
-      <div className={`relative border rounded-2xl transition-all duration-300 bg-[#FFF4F3]/30 backdrop-blur-sm ${focused ? 'border-[#FF6B35] ring-4 ring-[#FF6B35]/10 bg-white' : 'border-[#E09C96]/50 hover:border-[#FF6B35]/50'}`}>
+      <div className={`relative border rounded-2xl transition-all duration-300 bg-[#D6EFFB]/30 backdrop-blur-sm ${focused ? 'border-[#1D5FCC] ring-4 ring-[#1D5FCC]/10 bg-white' : 'border-[#A9CFEA]/50 hover:border-[#1D5FCC]/50'}`}>
         <label 
           htmlFor={id} 
-          className={`absolute left-4 transition-all duration-300 pointer-events-none font-medium ${active ? 'top-2 text-[10px] text-[#FF6B35] uppercase tracking-wider' : 'top-3.5 text-sm text-[#834C48]/70'}`}
+          className={`absolute left-4 transition-all duration-300 pointer-events-none font-medium ${active ? 'top-2 text-[10px] text-[#1D5FCC] uppercase tracking-wider' : 'top-3.5 text-sm text-[#4C6B8F]/70'}`}
         >
           {label}
         </label>
@@ -37,14 +37,14 @@ function AnimatedInput({
           onChange={onChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className={`w-full px-4 pt-6 pb-2 bg-transparent outline-none text-[#4E211E] font-medium text-[15px] placeholder-transparent transition-all`}
+          className={`w-full px-4 pt-6 pb-2 bg-transparent outline-none text-[#0E2A52] font-medium text-[15px] placeholder-transparent transition-all`}
           placeholder={active ? placeholder : ''}
         />
         {isPassword && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#834C48]/60 hover:text-[#FF6B35] transition-colors p-1"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#4C6B8F]/60 hover:text-[#1D5FCC] transition-colors p-1"
             aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             {showPassword ? (
@@ -88,16 +88,16 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <main className="min-h-[100dvh] bg-[#FFF4F3] flex flex-col relative overflow-hidden selection:bg-[#FF6B35]/30">
+    <main className="min-h-[100dvh] bg-[#D6EFFB] flex flex-col relative overflow-hidden selection:bg-[#1D5FCC]/30">
       {/* Elementos decorativos de fondo */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-[#FF6B35]/20 to-transparent blur-[100px] rounded-full pointer-events-none animate-pulse duration-[10s]"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-[#FF6B35]/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br from-[#1D5FCC]/20 to-transparent blur-[100px] rounded-full pointer-events-none animate-pulse duration-[10s]"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-[#1D5FCC]/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
 
       <header className="w-full px-6 py-6 flex justify-between items-center z-10 animate-fade-in">
         <Link href="/" className="transition-transform hover:scale-105 active:scale-95">
           <AppLogo />
         </Link>
-        <Link href="/signup" className="text-sm font-bold text-[#FF6B35] hover:text-[#A63300] transition-colors px-4 py-2 rounded-full hover:bg-[#FF6B35]/10">
+        <Link href="/signup" className="text-sm font-bold text-[#1D5FCC] hover:text-[#0E2A52] transition-colors px-4 py-2 rounded-full hover:bg-[#1D5FCC]/10">
           Crear cuenta
         </Link>
       </header>
@@ -106,13 +106,13 @@ export default function LoginPage() {
         <div className="w-full max-w-[440px]">
           
           <div className="text-center mb-8 animate-fade-up" style={{ animationDelay: '100ms' }}>
-            <span className="inline-block py-1 px-3 rounded-full bg-[#FF6B35]/10 text-[#FF6B35] text-[11px] font-extrabold uppercase tracking-widest mb-4">
+            <span className="inline-block py-1 px-3 rounded-full bg-[#1D5FCC]/10 text-[#1D5FCC] text-[11px] font-extrabold uppercase tracking-widest mb-4">
               Panel de control
             </span>
-            <h1 className="font-headline font-extrabold text-[#4E211E] text-3xl md:text-4xl mb-3 tracking-tight leading-tight">
+            <h1 className="font-headline font-extrabold text-[#0E2A52] text-3xl md:text-4xl mb-3 tracking-tight leading-tight">
               Bienvenido de vuelta
             </h1>
-            <p className="text-[#834C48] text-[15px] md:text-base px-4">
+            <p className="text-[#4C6B8F] text-[15px] md:text-base px-4">
               Entra a tu tienda y gestiona tu catálogo de productos.
             </p>
           </div>
@@ -152,7 +152,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group relative w-full bg-[#FF6B35] hover:bg-[#A63300] text-white font-bold text-[16px] py-4 rounded-2xl shadow-[0_8px_25px_rgba(255,107,53,0.3)] hover:shadow-[0_12px_30px_rgba(255,107,53,0.4)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:shadow-none disabled:hover:translate-y-0 overflow-hidden flex justify-center items-center h-[60px]"
+                  className="group relative w-full bg-[#1D5FCC] hover:bg-[#0E2A52] text-white font-bold text-[16px] py-4 rounded-2xl shadow-[0_8px_25px_rgba(29,95,204,0.3)] hover:shadow-[0_12px_30px_rgba(29,95,204,0.4)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:shadow-none disabled:hover:translate-y-0 overflow-hidden flex justify-center items-center h-[60px]"
                 >
                   <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   {loading ? (
@@ -173,9 +173,9 @@ export default function LoginPage() {
             </form>
           </div>
           
-          <p className="text-center text-[13px] text-[#834C48]/80 mt-8 animate-fade-in" style={{ animationDelay: '600ms', animationFillMode: 'both' }}>
+          <p className="text-center text-[13px] text-[#4C6B8F]/80 mt-8 animate-fade-in" style={{ animationDelay: '600ms', animationFillMode: 'both' }}>
             ¿No tienes cuenta?{' '}
-            <Link href="/signup" className="font-semibold text-[#FF6B35] hover:text-[#A63300] underline underline-offset-2 transition-colors">
+            <Link href="/signup" className="font-semibold text-[#1D5FCC] hover:text-[#0E2A52] underline underline-offset-2 transition-colors">
               Regístrate gratis
             </Link>
           </p>

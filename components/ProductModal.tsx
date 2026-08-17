@@ -66,7 +66,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
         </button>
 
         {/* Image Carousel */}
-        <div className="relative w-full aspect-square bg-[#FFE4D6] flex-shrink-0">
+        <div className="relative w-full aspect-square bg-[#C7E7F7] flex-shrink-0">
           {fotos.length > 0 ? (
             <>
               <Image

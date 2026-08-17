@@ -65,7 +65,7 @@ export default function TiendaContent({
     <main className="pb-28 md:pb-16">
       <div className="max-w-[1400px] mx-auto lg:px-6">
         {/* ── Hero banner ───────────────────────────────────────── */}
-        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] lg:aspect-[5/1] lg:mt-6 bg-[#FFE4D6] md:rounded-b-[32px] lg:rounded-[32px] overflow-hidden shadow-sm">
+        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] lg:aspect-[5/1] lg:mt-6 bg-[#C7E7F7] md:rounded-b-[32px] lg:rounded-[32px] overflow-hidden shadow-sm">
           <Image
             src={tienda.fotoPortadaUrl}
             alt={`Foto de portada de ${tienda.nombre}`}
@@ -111,26 +111,26 @@ export default function TiendaContent({
                 </span>
               </div>
 
-              <h1 className="font-headline font-black text-[#4E211E] text-3xl md:text-4xl leading-tight tracking-tight mb-3">
+              <h1 className="font-headline font-black text-[#0E2A52] text-3xl md:text-4xl leading-tight tracking-tight mb-3">
                 {tienda.nombre}
               </h1>
 
               {tienda.descripcionCorta && (
-                <p className="text-[#834C48]/90 text-[15px] leading-relaxed mb-6">
+                <p className="text-[#4C6B8F]/90 text-[15px] leading-relaxed mb-6">
                   {tienda.descripcionCorta}
                 </p>
               )}
 
               <div className="grid grid-cols-1 gap-3 mb-6">
-                <div className="flex items-center gap-3 bg-[#FFF4F3] p-3 rounded-[16px] border border-[#E09C96]/30">
+                <div className="flex items-center gap-3 bg-[#D6EFFB] p-3 rounded-[16px] border border-[#A9CFEA]/30">
                   <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm text-brand">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[11px] font-bold text-[#E09C96] uppercase tracking-wider">Horario</span>
-                    <span className="text-[13px] font-semibold text-[#4E211E]">{tienda.horario}</span>
+                    <span className="text-[11px] font-bold text-[#A9CFEA] uppercase tracking-wider">Horario</span>
+                    <span className="text-[13px] font-semibold text-[#0E2A52]">{tienda.horario}</span>
                   </div>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function TiendaContent({
 
           {/* ── Catalog (Main Content on Desktop) ── */}
           <div className="flex-1 bg-white lg:bg-transparent px-5 md:px-8 lg:px-0 pb-10 lg:pb-0 rounded-b-[32px]">
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#E09C96]/30 to-transparent mb-8 lg:hidden" />
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#A9CFEA]/30 to-transparent mb-8 lg:hidden" />
             
             <section aria-label="Catálogo de productos">
               <h2 className="font-headline font-black text-primary text-2xl md:text-3xl mb-6">

@@ -23,7 +23,7 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
   const [descripcionCorta, setDescripcionCorta] = useState(initialValues?.descripcionCorta ?? '');
   const [ubicacion, setUbicacion] = useState(initialValues?.ubicacion ?? '');
   const [horario, setHorario] = useState(initialValues?.horario ?? '');
-  const [colorAcento, setColorAcento] = useState(initialValues?.colorAcento ?? 'naranja');
+  const [colorAcento, setColorAcento] = useState(initialValues?.colorAcento ?? 'azul');
   const [fotoPortadaUrl, setFotoPortadaUrl] = useState<string | undefined>(initialValues?.fotoPortadaUrl);
   const [fotoOriginalUrl, setFotoOriginalUrl] = useState<string | undefined>(initialValues?.fotoOriginalUrl);
   const [error, setError] = useState('');
@@ -50,7 +50,7 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         <label className={labelClass}>
           Foto de portada <span className="text-muted font-normal">(opcional)</span>
         </label>
-        <div className="relative w-full aspect-[16/9] rounded-[16px] overflow-hidden bg-[#FFE4D6] border border-border">
+        <div className="relative w-full aspect-[16/9] rounded-[16px] overflow-hidden bg-[#C7E7F7] border border-border">
           {fotoPortadaUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={fotoPortadaUrl} alt="Portada" className="absolute inset-0 w-full h-full object-cover" />

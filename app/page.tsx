@@ -78,22 +78,22 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col lg:flex-row max-w-[1600px] mx-auto">
       
       {/* ── Desktop Sidebar ── */}
-      <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#E09C96]/30 px-6 py-8">
+      <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#A9CFEA]/30 px-6 py-8">
         <div className="mb-8">
-          <h1 className="font-headline font-black text-[#FF6B35] text-3xl tracking-tighter">Auntokke</h1>
-          <p className="text-[#834C48] text-sm mt-1">Altos de Copacabana</p>
+          <h1 className="font-headline font-black text-[#1D5FCC] text-3xl tracking-tighter">Auntokke</h1>
+          <p className="text-[#4C6B8F] text-sm mt-1">Altos de Copacabana</p>
         </div>
 
         {/* Location selector */}
-        <div className="mb-8 p-4 bg-[#FFF4F3] rounded-2xl border border-[#E09C96]/20">
-          <span className="text-[11px] font-bold text-[#FF6B35] uppercase tracking-wide">
+        <div className="mb-8 p-4 bg-[#D6EFFB] rounded-2xl border border-[#A9CFEA]/20">
+          <span className="text-[11px] font-bold text-[#1D5FCC] uppercase tracking-wide">
             Entregar en
           </span>
           <button className="flex items-center gap-1.5 text-left group w-full mt-1">
-            <span className="font-headline font-black text-[#4E211E] text-base truncate group-hover:text-[#FF6B35] transition-colors">
+            <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
               Altos de Copacabana
             </span>
-            <svg className="h-4 w-4 text-[#FF6B35] flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -101,7 +101,7 @@ export default function HomePage() {
 
         {/* Vertical Categories */}
         <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
-          <h2 className="font-headline font-bold text-[#4E211E] text-lg mb-4">Categorías</h2>
+          <h2 className="font-headline font-bold text-[#0E2A52] text-lg mb-4">Categorías</h2>
           <div className="flex flex-col gap-2">
             {['todas', ...Array.from(new Set(tiendas.map((t) => t.categoria)))].map((catId) => {
               const meta = catId === 'todas' ? { label: 'Todas', emoji: '✨' } : getCategoryMeta(catId);
@@ -114,15 +114,15 @@ export default function HomePage() {
                   onClick={() => setSelected(catId as Categoria | 'todas')}
                   className={`flex items-center justify-between w-full p-3 rounded-xl transition-all ${
                     isSelected 
-                      ? 'bg-[#FF6B35] text-white shadow-md' 
-                      : 'hover:bg-[#FFF4F3] text-[#4E211E]'
+                      ? 'bg-[#1D5FCC] text-white shadow-md' 
+                      : 'hover:bg-[#D6EFFB] text-[#0E2A52]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xl">{meta.emoji}</span>
                     <span className="font-semibold text-sm">{meta.label}</span>
                   </div>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-[#E09C96]/20 text-[#834C48]'}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-[#A9CFEA]/20 text-[#4C6B8F]'}`}>
                     {count}
                   </span>
                 </button>
@@ -136,32 +136,32 @@ export default function HomePage() {
       <main className="flex-1 flex flex-col min-w-0 bg-[#FAFAFA] lg:bg-white">
         
         {/* ── Mobile Header ── */}
-        <header className="lg:hidden bg-white px-4 pt-6 pb-2 border-b border-[#E09C96]/20">
+        <header className="lg:hidden bg-white px-4 pt-6 pb-2 border-b border-[#A9CFEA]/20">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[11px] font-bold text-[#FF6B35] uppercase tracking-wide">
+              <span className="text-[11px] font-bold text-[#1D5FCC] uppercase tracking-wide">
                 Entregar en
               </span>
               <button className="flex items-center gap-1.5 text-left group">
-                <span className="font-headline font-black text-[#4E211E] text-base truncate group-hover:text-[#FF6B35] transition-colors">
+                <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
                   Altos de Copacabana
                 </span>
-                <svg className="h-4 w-4 text-[#FF6B35] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
             </div>
             {/* User / Store Actions (Mobile) */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <Link href="/perfil" className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-[#4E211E] hover:bg-[#FFF4F3] transition-all">
+              <Link href="/perfil" className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] transition-all">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
               </Link>
               {user ? (
-                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
+                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                 </button>
               ) : (
-                <Link href="/login" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FF6B35] text-white shadow-md hover:bg-[#A63300] transition-colors">
+                <Link href="/login" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1D5FCC] text-white shadow-md hover:bg-[#0E2A52] transition-colors">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
                 </Link>
               )}
@@ -170,7 +170,7 @@ export default function HomePage() {
         </header>
 
         {/* ── Top Bar (Desktop & Mobile) ── */}
-        <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E09C96]/20">
+        <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md shadow-sm border-b border-[#A9CFEA]/20">
           <div className="flex items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
             <div className="flex-1 max-w-2xl">
               <SearchBar defaultValue={query} onSearch={setQuery} />
@@ -178,16 +178,16 @@ export default function HomePage() {
             
             {/* User / Store Actions (Desktop) */}
             <div className="hidden lg:flex items-center gap-3 flex-shrink-0 ml-4">
-              <Link href="/perfil" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-[#4E211E] hover:bg-[#FFF4F3] font-bold text-sm transition-all">
-                <svg className="h-5 w-5 text-[#FF6B35]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+              <Link href="/perfil" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] font-bold text-sm transition-all">
+                <svg className="h-5 w-5 text-[#1D5FCC]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                 Mi Tienda
               </Link>
               {user ? (
-                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-11 h-11 rounded-full bg-white border border-[#E09C96]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
+                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-11 h-11 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                 </button>
               ) : (
-                <Link href="/login" className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#FF6B35] text-white font-bold text-sm shadow-md hover:bg-[#A63300] transition-colors">
+                <Link href="/login" className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#1D5FCC] text-white font-bold text-sm shadow-md hover:bg-[#0E2A52] transition-colors">
                   Iniciar sesión
                 </Link>
               )}
@@ -215,7 +215,7 @@ export default function HomePage() {
 
           {/* ── Tiendas ── */}
           <div className="px-4 py-6 md:py-8 lg:px-8 flex-1">
-            <h2 className="font-headline font-bold text-[#4E211E] text-2xl mb-6 hidden lg:block">
+            <h2 className="font-headline font-bold text-[#0E2A52] text-2xl mb-6 hidden lg:block">
               {query ? `Resultados para "${query}"` : selected === 'todas' ? 'Todas las tiendas' : `Tiendas de ${getCategoryMeta(selected as string).label}`}
             </h2>
 

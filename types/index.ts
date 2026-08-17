@@ -19,7 +19,7 @@ export interface Tienda {
   /** Número en formato internacional, ej. "584121234567" */
   whatsapp: string;
   activa: boolean;
-  /** Clave de una paleta de lib/constants.ts#ACENTOS. Si falta, se usa la paleta por defecto ('naranja'). */
+  /** Clave de una paleta de lib/constants.ts#ACENTOS. Si falta, se usa la paleta por defecto ('azul'). */
   colorAcento?: string;
 }
 
