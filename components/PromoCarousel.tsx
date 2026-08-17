@@ -6,24 +6,27 @@ import Image from 'next/image';
 const PROMOS = [
   {
     id: 1,
-    title: '¡50% de Descuento!',
-    subtitle: 'En tu primera compra de hamburguesas',
+    title: 'Apoya lo local 🤝',
+    subtitle: 'Encuentra todo lo que necesitas sin salir de tu barrio',
     bgUrl: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=800&auto=format&fit=crop',
     color: 'from-orange-500/90 to-orange-800/90',
+    btnText: 'Explorar tiendas',
   },
   {
     id: 2,
-    title: 'Envío Gratis 🛵',
-    subtitle: 'En todas las ferreterías de la zona',
+    title: '¿Tienes un negocio? 🚀',
+    subtitle: 'Regístralo gratis y llega a más vecinos hoy mismo',
     bgUrl: 'https://images.unsplash.com/photo-1581166397057-235af2b3c6dd?q=80&w=800&auto=format&fit=crop',
     color: 'from-blue-500/90 to-indigo-800/90',
+    btnText: 'Crear mi tienda',
   },
   {
     id: 3,
-    title: 'Antojos Dulces 🍰',
-    subtitle: 'Descubre los mejores postres de tus vecinos',
+    title: 'Recién horneado 🥐',
+    subtitle: 'Descubre los mejores antojos dulces y salados cerca de ti',
     bgUrl: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=800&auto=format&fit=crop',
     color: 'from-pink-500/90 to-rose-800/90',
+    btnText: 'Ver comida',
   },
 ];
 
@@ -80,7 +83,7 @@ export default function PromoCarousel() {
               </p>
               <div className="mt-4">
                 <span className="inline-block bg-white text-[#4E211E] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '0.2s' }}>
-                  Ver promoción
+                  {promo.btnText}
                 </span>
               </div>
             </div>
