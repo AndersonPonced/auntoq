@@ -17,6 +17,8 @@ export const CATEGORIAS: CategoryMeta[] = [
   { slug: 'reposteria', label: 'Repostería', emoji: '🎂' },
   { slug: 'belleza', label: 'Belleza', emoji: '💅' },
   { slug: 'transporte', label: 'Transporte', emoji: '🚕' },
+  { slug: 'servicios', label: 'Servicios', emoji: '🛠️' },
+  { slug: 'variedades', label: 'Variedades', emoji: '🏷️' },
   { slug: 'otros', label: 'Otros', emoji: '📦' },
 ];
 

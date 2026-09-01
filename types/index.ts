@@ -5,6 +5,8 @@ export type Categoria =
   | 'reposteria'
   | 'belleza'
   | 'transporte'
+  | 'servicios'
+  | 'variedades'
   | 'otros';
 
 export interface Tienda {
