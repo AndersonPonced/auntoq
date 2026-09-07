@@ -11,6 +11,7 @@ import ShareButton from '@/components/ShareButton';
 import TiendaForm from '@/components/TiendaForm';
 import ProductoForm from '@/components/ProductoForm';
 import EmptyState from '@/components/EmptyState';
+import SocialLinks from '@/components/SocialLinks';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
 import { getSession } from '@/lib/auth';
@@ -59,6 +60,11 @@ export default function PerfilPage() {
           whatsapp: data.whatsapp ?? '',
           fotoPortadaUrl: data.foto_portada_url,
           colorAcento: data.color_acento,
+          instagram: data.instagram,
+          facebook: data.facebook,
+          linktree: data.linktree,
+          logoUrl: data.logo_url,
+          logoOriginalUrl: data.logo_original_url,
           activa: true,
         });
 
@@ -98,6 +104,11 @@ export default function PerfilPage() {
       horario: values.horario,
       foto_portada_url: values.fotoPortadaUrl,
       color_acento: values.colorAcento,
+      instagram: values.instagram || null,
+      facebook: values.facebook || null,
+      linktree: values.linktree || null,
+      logo_url: values.logoUrl || null,
+      logo_original_url: values.logoOriginalUrl || null,
     }).eq('id', tienda.id);
 
     if (!error) {
@@ -252,6 +263,13 @@ export default function PerfilPage() {
               </div>
             </div>
 
+            {(tienda.instagram || tienda.facebook || tienda.linktree) && (
+              <div>
+                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">Redes sociales</p>
+                <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} />
+              </div>
+            )}
+
             <hr className="border-border" />
 
             {/* ── Productos ── */}
@@ -293,14 +311,23 @@ export default function PerfilPage() {
                       </li>
                     ) : (
                       <li key={p.id}>
-                        <button
-                          type="button"
-                          className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[20px]"
+                        {/* div (not button) — ProductCard renders its own edit/delete buttons inside,
+                            and <button> can't nest inside <button> without breaking hydration. */}
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          className="w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[20px]"
                           onClick={() => setSelectedProduct(p)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setSelectedProduct(p);
+                            }
+                          }}
                           aria-label={`Ver detalle de ${p.nombre}`}
                         >
                           <ProductCard producto={p} index={i} onEdit={() => setEditandoProductoId(p.id)} onDelete={() => setConfirmandoEliminarId(p.id)} />
-                        </button>
+                        </div>
                       </li>
                     )
                   )}
@@ -347,6 +374,11 @@ export default function PerfilPage() {
           storeName={tienda.nombre}
           acento={getAcentoMeta(tienda.colorAcento)}
           whatsapp={tienda.whatsapp}
+          tiendaId={tienda.id}
+          categoriaEmoji={cat?.emoji}
+          categoriaLabel={cat?.label}
+          logoUrl={tienda.logoUrl}
+          esPropietario
           onClose={() => setSelectedProduct(null)}
         />
       )}

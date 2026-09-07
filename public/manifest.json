@@ -1,7 +1,7 @@
 {
-  "name": "Auntokke - Altos de Copacabana",
+  "name": "Auntokke",
   "short_name": "Auntokke",
-  "description": "Vecinos de Altos de Copacabana que venden desde su casa",
+  "description": "Vecinos que venden desde su casa",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",

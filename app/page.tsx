@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import SearchBar from '@/components/SearchBar';
 import CategoryChips from '@/components/CategoryChips';
 import StoreCard from '@/components/StoreCard';
@@ -21,6 +22,7 @@ export default function HomePage() {
 
   const [selected, setSelected] = useState<Categoria | 'todas'>('todas');
   const [user, setUser] = useState<Usuario | null>(null);
+  const [miLogoUrl, setMiLogoUrl] = useState<string | null>(null);
   const [tiendas, setTiendas] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -33,10 +35,13 @@ export default function HomePage() {
     if (session) {
       supabase
         .from('tiendas')
-        .select('id')
+        .select('id, logo_url')
         .eq('owner_id', session.id)
         .maybeSingle()
-        .then(({ data }) => { if (!data) router.push('/registro'); });
+        .then(({ data }) => {
+          if (!data) { router.push('/registro'); return; }
+          setMiLogoUrl(data.logo_url ?? null);
+        });
     }
 
     // Cargar todas las tiendas desde Supabase
@@ -81,7 +86,6 @@ export default function HomePage() {
       <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#A9CFEA]/30 px-6 py-8">
         <div className="mb-8">
           <h1 className="font-headline font-black text-[#1D5FCC] text-3xl tracking-tighter">Auntokke</h1>
-          <p className="text-[#4C6B8F] text-sm mt-1">Altos de Copacabana</p>
         </div>
 
         {/* Location selector */}
@@ -91,7 +95,7 @@ export default function HomePage() {
           </span>
           <button className="flex items-center gap-1.5 text-left group w-full mt-1">
             <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
-              Altos de Copacabana
+              AUNTOKKE
             </span>
             <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -144,7 +148,7 @@ export default function HomePage() {
               </span>
               <button className="flex items-center gap-1.5 text-left group">
                 <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
-                  Altos de Copacabana
+                  AUNTOKKE
                 </span>
                 <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -153,8 +157,12 @@ export default function HomePage() {
             </div>
             {/* User / Store Actions (Mobile) */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <Link href="/perfil" className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] transition-all">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+              <Link href="/perfil" aria-label="Mi tienda" className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] transition-all overflow-hidden">
+                {miLogoUrl ? (
+                  <Image src={miLogoUrl} alt="" width={40} height={40} className="w-full h-full object-cover" />
+                ) : (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                )}
               </Link>
               {user ? (
                 <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
@@ -179,7 +187,11 @@ export default function HomePage() {
             {/* User / Store Actions (Desktop) */}
             <div className="hidden lg:flex items-center gap-3 flex-shrink-0 ml-4">
               <Link href="/perfil" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] font-bold text-sm transition-all">
-                <svg className="h-5 w-5 text-[#1D5FCC]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                {miLogoUrl ? (
+                  <Image src={miLogoUrl} alt="" width={20} height={20} className="h-5 w-5 rounded-full object-cover flex-shrink-0" />
+                ) : (
+                  <svg className="h-5 w-5 text-[#1D5FCC]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                )}
                 Mi Tienda
               </Link>
               {user ? (

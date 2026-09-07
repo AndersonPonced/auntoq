@@ -23,6 +23,14 @@ export interface Tienda {
   activa: boolean;
   /** Clave de una paleta de lib/constants.ts#ACENTOS. Si falta, se usa la paleta por defecto ('azul'). */
   colorAcento?: string;
+  /** Usuario (sin @) o URL completa de Instagram. */
+  instagram?: string;
+  /** Usuario o URL completa de Facebook. */
+  facebook?: string;
+  /** Usuario o URL completa de Linktree. */
+  linktree?: string;
+  /** Logo cuadrado de la tienda (opcional) — usado en el lockup de marca al compartir un producto. */
+  logoUrl?: string;
 }
 
 export interface Producto {

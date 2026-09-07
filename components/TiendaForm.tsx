@@ -7,7 +7,7 @@ import type { TiendaInput } from '@/lib/owner-local';
 import ImageCropper from '@/components/ImageCropper';
 
 interface TiendaFormProps {
-  initialValues?: Partial<TiendaInput> & { fotoOriginalUrl?: string };
+  initialValues?: Partial<TiendaInput> & { fotoOriginalUrl?: string; logoOriginalUrl?: string };
   submitLabel: string;
   onSubmit: (values: any) => void;
   onCancel?: () => void;
@@ -24,8 +24,13 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
   const [ubicacion, setUbicacion] = useState(initialValues?.ubicacion ?? '');
   const [horario, setHorario] = useState(initialValues?.horario ?? '');
   const [colorAcento, setColorAcento] = useState(initialValues?.colorAcento ?? 'azul');
+  const [instagram, setInstagram] = useState(initialValues?.instagram ?? '');
+  const [facebook, setFacebook] = useState(initialValues?.facebook ?? '');
+  const [linktree, setLinktree] = useState(initialValues?.linktree ?? '');
   const [fotoPortadaUrl, setFotoPortadaUrl] = useState<string | undefined>(initialValues?.fotoPortadaUrl);
   const [fotoOriginalUrl, setFotoOriginalUrl] = useState<string | undefined>(initialValues?.fotoOriginalUrl);
+  const [logoUrl, setLogoUrl] = useState<string | undefined>(initialValues?.logoUrl);
+  const [logoOriginalUrl, setLogoOriginalUrl] = useState<string | undefined>(initialValues?.logoOriginalUrl);
   const [error, setError] = useState('');
 
   function handleSubmit(e: FormEvent) {
@@ -36,7 +41,21 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
     }
     setError('');
     try {
-      onSubmit({ nombre: nombre.trim(), categoria, descripcionCorta: descripcionCorta.trim() || undefined, ubicacion: ubicacion.trim(), horario: horario.trim(), fotoPortadaUrl, fotoOriginalUrl, colorAcento });
+      onSubmit({
+        nombre: nombre.trim(),
+        categoria,
+        descripcionCorta: descripcionCorta.trim() || undefined,
+        ubicacion: ubicacion.trim(),
+        horario: horario.trim(),
+        fotoPortadaUrl,
+        fotoOriginalUrl,
+        logoUrl,
+        logoOriginalUrl,
+        colorAcento,
+        instagram: instagram.trim() || undefined,
+        facebook: facebook.trim() || undefined,
+        linktree: linktree.trim() || undefined,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar.');
     }
@@ -69,6 +88,35 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         <p className="text-xs text-muted mt-1.5">
           {fotoPortadaUrl ? 'Toca la imagen para ajustar el encuadre.' : 'Sube una foto de portada para tu tienda.'}
         </p>
+      </div>
+
+      {/* ── Logo (opcional) ── */}
+      <div>
+        <label className={labelClass}>
+          Logo de tu tienda <span className="text-muted font-normal">(opcional)</span>
+        </label>
+        <div className="flex items-center gap-3">
+          <div className="relative h-20 w-20 flex-shrink-0 rounded-full overflow-hidden bg-[#C7E7F7] border border-border">
+            {logoUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt="Logo" className="absolute inset-0 w-full h-full object-cover" />
+            )}
+            <ImageCropper
+              folder="tiendas"
+              aspect={1}
+              compact
+              currentUrl={logoUrl ?? null}
+              originalUrl={logoOriginalUrl ?? null}
+              onUploaded={(displayUrl, origUrl) => {
+                setLogoUrl(displayUrl);
+                setLogoOriginalUrl(origUrl);
+              }}
+            />
+          </div>
+          <p className="text-xs text-muted flex-1">
+            Aparece junto al nombre de tu tienda cuando compartes un producto en tu estado.
+          </p>
+        </div>
       </div>
 
       {/* ── Nombre ── */}
@@ -125,6 +173,25 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
       <div>
         <label htmlFor="f-horario" className={labelClass}>Horario</label>
         <input id="f-horario" className={inputClass} value={horario} onChange={(e) => setHorario(e.target.value)} placeholder="Ej. Lun-Sáb 8am-6pm" />
+      </div>
+
+      {/* ── Redes sociales ── */}
+      <div className="space-y-3 pt-1">
+        <p className="text-xs font-semibold text-muted uppercase tracking-wide">
+          Redes sociales <span className="font-normal normal-case">(opcional)</span>
+        </p>
+        <div>
+          <label htmlFor="f-instagram" className={labelClass}>Instagram</label>
+          <input id="f-instagram" className={inputClass} value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@tutienda o URL completa" />
+        </div>
+        <div>
+          <label htmlFor="f-facebook" className={labelClass}>Facebook</label>
+          <input id="f-facebook" className={inputClass} value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="Nombre de tu página o URL completa" />
+        </div>
+        <div>
+          <label htmlFor="f-linktree" className={labelClass}>Linktree</label>
+          <input id="f-linktree" className={inputClass} value={linktree} onChange={(e) => setLinktree(e.target.value)} placeholder="Usuario o URL completa" />
+        </div>
       </div>
 
       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}

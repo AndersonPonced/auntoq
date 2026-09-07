@@ -84,7 +84,25 @@ export function buildWhatsAppLink(whatsapp: string, storeName: string): string {
   // Si no empieza con el código de Venezuela (58), lo agregamos automáticamente
   const number = clean.startsWith('58') ? clean : `58${clean}`;
   const text = encodeURIComponent(
-    `Hola, vi el catálogo de ${storeName} en Auntokke (Altos de Copacabana) y quiero pedir: `,
+    `Hola, vi el catálogo de ${storeName} en Auntokke y quiero pedir: `,
   );
   return `https://wa.me/${number}?text=${text}`;
+}
+
+// ---------------------------------------------------------------------------
+// Social links — owners can type either a bare username or a full URL;
+// this normalizes either into a clickable link per platform.
+// ---------------------------------------------------------------------------
+export type RedSocial = 'instagram' | 'facebook' | 'linktree';
+
+const SOCIAL_BASE_URL: Record<RedSocial, string> = {
+  instagram: 'https://instagram.com/',
+  facebook: 'https://facebook.com/',
+  linktree: 'https://linktr.ee/',
+};
+
+export function buildSocialUrl(red: RedSocial, value: string): string {
+  const trimmed = value.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `${SOCIAL_BASE_URL[red]}${trimmed.replace(/^@/, '')}`;
 }

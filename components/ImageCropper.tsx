@@ -13,6 +13,8 @@ interface ImageCropperProps {
   originalUrl?: string | null;
   /** Se llama con (displayUrl, originalUrl) cuando se confirma el recorte */
   onUploaded: (displayUrl: string, originalUrl: string) => void;
+  /** Trigger pequeño de solo ícono, para targets chicos (ej. el logo de la tienda). */
+  compact?: boolean;
 }
 
 async function getCroppedBlob(
@@ -36,7 +38,7 @@ async function getCroppedBlob(
   });
 }
 
-export default function ImageCropper({ folder, aspect = 16 / 9, currentUrl, originalUrl, onUploaded }: ImageCropperProps) {
+export default function ImageCropper({ folder, aspect = 16 / 9, currentUrl, originalUrl, onUploaded, compact = false }: ImageCropperProps) {
   const [rawSrc, setRawSrc] = useState<string | null>(null);
   const [pendingOriginalUrl, setPendingOriginalUrl] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -118,6 +120,23 @@ export default function ImageCropper({ folder, aspect = 16 / 9, currentUrl, orig
 
   // ─── Sin imagen: zona de upload ───────────────────────────────────────────
   if (!currentUrl) {
+    if (compact) {
+      return (
+        <>
+          <label className="cursor-pointer absolute inset-0 z-10 flex items-center justify-center hover:bg-black/5 transition-colors">
+            <input type="file" accept="image/*" className="sr-only" onChange={handleFileChange} />
+            <div className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-md text-primary">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </label>
+          {error && <p className="absolute -bottom-5 left-0 right-0 text-center text-[10px] text-red-500">{error}</p>}
+          {rawSrc && <CropperModal rawSrc={rawSrc} crop={crop} zoom={zoom} aspect={aspect} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} onConfirm={handleConfirm} onCancel={handleCancel} uploading={uploading} error={error} />}
+        </>
+      );
+    }
     return (
       <>
         <label className="cursor-pointer block w-full h-full absolute inset-0 z-10">
@@ -135,6 +154,22 @@ export default function ImageCropper({ folder, aspect = 16 / 9, currentUrl, orig
         {error && <p className="absolute bottom-2 left-0 right-0 text-center text-xs text-red-500 bg-white/80 py-0.5">{error}</p>}
 
         {/* Modal recortador */}
+        {rawSrc && <CropperModal rawSrc={rawSrc} crop={crop} zoom={zoom} aspect={aspect} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} onConfirm={handleConfirm} onCancel={handleCancel} uploading={uploading} error={error} />}
+      </>
+    );
+  }
+
+  // ─── Con imagen, modo compacto: un solo botón de lápiz ────────────────────
+  if (compact) {
+    return (
+      <>
+        <label className="absolute bottom-0 right-0 z-10 cursor-pointer bg-white/95 text-primary p-1.5 rounded-full shadow-md hover:bg-white transition-colors">
+          <input type="file" accept="image/*" className="sr-only" onChange={handleFileChange} />
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </label>
+        {error && <p className="absolute -bottom-5 left-0 right-0 text-center text-[10px] text-red-500">{error}</p>}
         {rawSrc && <CropperModal rawSrc={rawSrc} crop={crop} zoom={zoom} aspect={aspect} onCropChange={setCrop} onZoomChange={setZoom} onCropComplete={onCropComplete} onConfirm={handleConfirm} onCancel={handleCancel} uploading={uploading} error={error} />}
       </>
     );

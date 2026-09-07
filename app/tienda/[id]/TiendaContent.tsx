@@ -9,6 +9,7 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import ShareButton from '@/components/ShareButton';
 import EmptyState from '@/components/EmptyState';
 import Footer from '@/components/Footer';
+import SocialLinks from '@/components/SocialLinks';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import type { Tienda, Producto } from '@/types';
@@ -28,7 +29,6 @@ export default function TiendaContent({
   // locally instead — used by the static /tienda/mi-tienda route.
   const miTiendaLocal = useMiTienda();
   const misProductosLocal = useMisProductos();
-  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
 
   const tienda = tiendaInicial ?? miTiendaLocal;
   const productos = tiendaInicial
@@ -36,6 +36,17 @@ export default function TiendaContent({
     : tienda
       ? misProductosLocal.filter((p) => p.tiendaId === tienda.id)
       : [];
+
+  // Auto-abre el producto cuando se llega desde un link compartido
+  // (?producto=<id>), ej. el botón "Compartir" del ProductModal. Se
+  // inicializa perezosamente (no con un efecto) porque `productos` ya
+  // está disponible de forma síncrona en el primer render.
+  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const productoId = new URLSearchParams(window.location.search).get('producto');
+    if (!productoId) return null;
+    return productos.find((p) => p.id === productoId) ?? null;
+  });
 
   if (!tienda) {
     return (
@@ -135,6 +146,13 @@ export default function TiendaContent({
                 </div>
               </div>
 
+              {(tienda.instagram || tienda.facebook || tienda.linktree) && (
+                <div className="mb-6">
+                  <p className="text-[11px] font-bold text-[#A9CFEA] uppercase tracking-wider mb-2">Redes sociales</p>
+                  <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} />
+                </div>
+              )}
+
               <div className="hidden md:block">
                 <WhatsAppButton whatsapp={tienda.whatsapp} storeName={tienda.nombre} />
               </div>
@@ -192,6 +210,10 @@ export default function TiendaContent({
         storeName={tienda.nombre}
         acento={acento}
         whatsapp={tienda.whatsapp}
+        tiendaId={tienda.id}
+        categoriaEmoji={cat.emoji}
+        categoriaLabel={cat.label}
+        logoUrl={tienda.logoUrl}
         onClose={() => setSelectedProduct(null)}
       />
     )}

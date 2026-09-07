@@ -11,7 +11,7 @@ export default function Footer() {
               <AppLogo />
             </div>
             <p className="text-[#4C6B8F] text-[13px] md:text-sm text-center md:text-left max-w-xs leading-relaxed">
-              Conectando los negocios y vecinos de Altos de Copacabana.
+              Conectando los negocios y vecinos de Auntokke.
             </p>
           </div>
           

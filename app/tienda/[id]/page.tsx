@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: tienda.nombre,
     description:
       tienda.descripcion_corta ??
-      `Catálogo de ${tienda.nombre} en Auntokke — Altos de Copacabana`,
+      `Catálogo de ${tienda.nombre} en Auntokke`,
   };
 }
 
@@ -66,6 +66,10 @@ export default async function TiendaPage({ params }: Props) {
     whatsapp,
     fotoPortadaUrl: tiendaData.foto_portada_url,
     colorAcento: tiendaData.color_acento,
+    instagram: tiendaData.instagram,
+    facebook: tiendaData.facebook,
+    linktree: tiendaData.linktree,
+    logoUrl: tiendaData.logo_url,
     activa: true,
   };
 

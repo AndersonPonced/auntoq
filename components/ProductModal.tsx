@@ -3,18 +3,30 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { Producto } from '@/types';
-import { formatPrice } from '@/lib/constants';
+import { formatPrice, tiendaHref } from '@/lib/constants';
+import { generateStoryImage } from '@/lib/image-utils';
 
 interface ProductModalProps {
   producto: Producto;
   storeName: string;
   acento: { base: string; dark: string };
   whatsapp: string;
+  /** Store id — used to build the shareable link back to this product. */
+  tiendaId: string;
+  /** Store category — shown as a badge on the generated Story/Status image. */
+  categoriaEmoji?: string;
+  categoriaLabel?: string;
+  /** Optional store logo — shown next to the store name on the generated image. */
+  logoUrl?: string;
+  /** True only when the store's own owner is viewing (e.g. from "Mi tienda") — gates the "add your logo" tip below the share buttons, since a visitor can't act on it. */
+  esPropietario?: boolean;
   onClose: () => void;
 }
 
-export default function ProductModal({ producto, storeName, acento, whatsapp, onClose }: ProductModalProps) {
+export default function ProductModal({ producto, storeName, acento, whatsapp, tiendaId, categoriaEmoji, categoriaLabel, logoUrl, esPropietario = false, onClose }: ProductModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [compartiendo, setCompartiendo] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
   const fotos = producto.fotosUrls?.length ? producto.fotosUrls : (producto.fotoUrl ? [producto.fotoUrl] : []);
 
   // Cerrar con Escape
@@ -36,6 +48,80 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
     `Hola, vi el catálogo de ${storeName} en Auntokke y quiero pedir:\n\n*${producto.nombre}* - ${formatPrice(producto.precio)}\n\n`
   );
   const waLink = `https://wa.me/${number}?text=${msg}`;
+
+  // Link back to this exact product — TiendaContent reads `?producto=` on
+  // load and opens this same modal for whoever clicks it.
+  const productUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${tiendaHref(tiendaId)}?producto=${producto.id}`
+    : '';
+  const groupCaption = `Mira "${producto.nombre}" (${formatPrice(producto.precio)}) de ${storeName} en Auntokke:\n${productUrl}`;
+  // Text-only fallback for browsers that can't share files (mainly desktop) —
+  // at least the link goes through even without the image attached.
+  const groupTextOnlyLink = `https://wa.me/?text=${encodeURIComponent(groupCaption)}`;
+
+  /**
+   * Generates the Story/Status image and hands it to the OS share sheet
+   * together with `caption` — WhatsApp receives both the file and the text
+   * when the user picks it (and their chat/group/status of choice) there.
+   * Falls back to just downloading the image (plus opening `fallbackLink`,
+   * if given) when file sharing isn't supported or the share attempt fails.
+   */
+  async function shareProductImage(caption: string, fallbackLink?: string) {
+    setShareError(null);
+    setCompartiendo(true);
+    try {
+      const dataUrl = await generateStoryImage({
+        fotoUrl: fotos[0],
+        nombre: producto.nombre,
+        precioTexto: formatPrice(producto.precio),
+        storeName,
+        acentoBase: acento.base,
+        acentoDark: acento.dark,
+        categoriaEmoji,
+        categoriaLabel,
+        logoUrl,
+      });
+
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], `${producto.nombre}.png`, { type: 'image/png' });
+      const shareData = { files: [file], title: producto.nombre, text: caption };
+
+      let shared = false;
+      if (navigator.canShare?.(shareData)) {
+        try {
+          await navigator.share(shareData);
+          shared = true;
+        } catch (shareErr) {
+          // User cancelled the native share sheet — leave it at that.
+          if (shareErr instanceof DOMException && shareErr.name === 'AbortError') return;
+          // Any other failure (e.g. the browser refused because the gesture
+          // had gone stale by the time the image finished generating) falls
+          // through to the fallback below instead of dead-ending.
+        }
+      }
+
+      if (!shared) {
+        // Desktop / unsupported browser / share() failed — download the
+        // image so it can be attached by hand, and still open the WhatsApp
+        // link (if any) so the text/link isn't lost either.
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = `${producto.nombre}.png`;
+        a.click();
+        if (fallbackLink) window.open(fallbackLink, '_blank', 'noopener,noreferrer');
+      }
+    } catch (err) {
+      console.error(err);
+      setShareError('No se pudo generar la imagen. Intenta de nuevo.');
+    } finally {
+      setCompartiendo(false);
+    }
+  }
+
+  const handleShareStory = () =>
+    shareProductImage(`${producto.nombre} - ${formatPrice(producto.precio)} en ${storeName}`);
+
+  const handleShareGroup = () => shareProductImage(groupCaption, groupTextOnlyLink);
 
   return (
     /* Backdrop */
@@ -148,6 +234,46 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, on
           ) : (
             <p className="text-center text-sm text-muted py-2">Este producto no está disponible actualmente.</p>
           )}
+
+          {/* ── Compartir producto ── */}
+          <div className="pt-2 border-t border-border">
+            <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2 pt-2">
+              Compartir producto
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleShareStory}
+                disabled={compartiendo}
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border border-border text-primary text-xs font-semibold hover:bg-bg transition-colors disabled:opacity-60"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <rect x="7" y="2" width="10" height="20" rx="3" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                {compartiendo ? 'Generando…' : 'Estado / Stories'}
+              </button>
+              <button
+                type="button"
+                onClick={handleShareGroup}
+                disabled={compartiendo}
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border border-border text-primary text-xs font-semibold hover:bg-bg transition-colors disabled:opacity-60"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-4a4 4 0 100-8 4 4 0 000 8zm7 4a4 4 0 10-8 0" />
+                </svg>
+                {compartiendo ? 'Generando…' : 'Grupo de WhatsApp'}
+              </button>
+            </div>
+            {shareError && (
+              <p role="alert" className="text-xs text-red-600 mt-2">{shareError}</p>
+            )}
+            {esPropietario && !logoUrl && (
+              <p className="text-[11px] text-muted mt-2 leading-relaxed">
+                💡 Agrega el logo de tu tienda en <span className="font-semibold">Editar</span> para que aparezca en la imagen que compartes.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

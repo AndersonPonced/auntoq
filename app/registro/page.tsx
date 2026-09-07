@@ -40,6 +40,11 @@ export default function RegistroPage() {
           fotoPortadaUrl: data.foto_portada_url,
           fotoOriginalUrl: data.foto_original_url,
           colorAcento: data.color_acento,
+          instagram: data.instagram,
+          facebook: data.facebook,
+          linktree: data.linktree,
+          logoUrl: data.logo_url,
+          logoOriginalUrl: data.logo_original_url,
         });
       } else {
         // Pre-llenar el whatsapp con el teléfono del registro
@@ -65,6 +70,11 @@ export default function RegistroPage() {
       foto_portada_url: values.fotoPortadaUrl || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=960&q=80',
       foto_original_url: values.fotoOriginalUrl || null,
       color_acento: values.colorAcento,
+      instagram: values.instagram || null,
+      facebook: values.facebook || null,
+      linktree: values.linktree || null,
+      logo_url: values.logoUrl || null,
+      logo_original_url: values.logoOriginalUrl || null,
     };
 
     let error;

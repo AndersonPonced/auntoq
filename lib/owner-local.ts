@@ -31,6 +31,10 @@ export interface TiendaInput {
   fotoPortadaUrl?: string;
   /** Key from lib/constants.ts#ACENTOS. Falls back to 'azul' (brand default) when omitted. */
   colorAcento?: string;
+  instagram?: string;
+  facebook?: string;
+  linktree?: string;
+  logoUrl?: string;
 }
 
 export interface ProductoInput {
@@ -125,6 +129,10 @@ export function saveMiTienda(input: TiendaInput): Tienda {
     whatsapp: input.whatsapp,
     activa: true,
     colorAcento: input.colorAcento ?? existing?.colorAcento ?? 'azul',
+    instagram: input.instagram,
+    facebook: input.facebook,
+    linktree: input.linktree,
+    logoUrl: input.logoUrl ?? existing?.logoUrl,
   };
   safeSetItem(STORAGE_KEY, JSON.stringify(tienda));
   emitChange();
