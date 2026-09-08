@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
@@ -12,14 +12,18 @@ import Footer from '@/components/Footer';
 import SocialLinks from '@/components/SocialLinks';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
+import { createClient } from '@/lib/supabase/client';
 import type { Tienda, Producto } from '@/types';
 
 interface TiendaContentProps {
+  /** ID de la tienda — usado para fetch client-side en export estático */
+  tiendaId?: string;
   tiendaInicial: Tienda | null;
   productosIniciales: Producto[];
 }
 
 export default function TiendaContent({
+  tiendaId,
   tiendaInicial,
   productosIniciales,
 }: TiendaContentProps) {
@@ -30,9 +34,77 @@ export default function TiendaContent({
   const miTiendaLocal = useMiTienda();
   const misProductosLocal = useMisProductos();
 
-  const tienda = tiendaInicial ?? miTiendaLocal;
-  const productos = tiendaInicial
-    ? productosIniciales
+  // Client-side state — starts from props (build-time data) and is refreshed
+  // from Supabase on mount so data is always up to date.
+  const [tiendaData, setTiendaData] = useState<Tienda | null>(tiendaInicial);
+  const [productosData, setProductosData] = useState<Producto[]>(productosIniciales);
+  const [loadingData, setLoadingData] = useState(!tiendaInicial && !!tiendaId);
+
+  // Fetch fresh data from Supabase on the client.
+  // This runs on every page visit, ensuring the store info and products
+  // are always current regardless of when the static build happened.
+  useEffect(() => {
+    const id = tiendaId;
+    if (!id) return;
+
+    const supabase = createClient();
+
+    async function fetchTienda() {
+      setLoadingData(true);
+      try {
+        const [{ data: t }, { data: prods }] = await Promise.all([
+          supabase.from('tiendas').select('*').eq('id', id).maybeSingle(),
+          supabase.from('productos').select('*').eq('tienda_id', id).order('created_at', { ascending: true }),
+        ]);
+
+        if (!t) { setLoadingData(false); return; }
+
+        // Resolve whatsapp from perfiles if needed
+        let whatsapp = t.whatsapp ?? '';
+        if (!whatsapp && t.owner_id) {
+          const { data: perfil } = await supabase
+            .from('perfiles').select('telefono').eq('id', t.owner_id).maybeSingle();
+          whatsapp = perfil?.telefono ?? '';
+        }
+
+        setTiendaData({
+          id: t.id,
+          nombre: t.nombre,
+          categoria: t.categoria,
+          descripcionCorta: t.descripcion_corta,
+          ubicacion: t.ubicacion,
+          horario: t.horario,
+          whatsapp,
+          fotoPortadaUrl: t.foto_portada_url,
+          colorAcento: t.color_acento,
+          instagram: t.instagram,
+          facebook: t.facebook,
+          linktree: t.linktree,
+          logoUrl: t.logo_url,
+          activa: true,
+        });
+
+        setProductosData((prods ?? []).map((p: any) => ({
+          id: p.id,
+          nombre: p.nombre,
+          precio: p.precio,
+          disponible: p.disponible,
+          fotoUrl: p.foto_url,
+          fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
+          descripcion: p.descripcion,
+          tiendaId: p.tienda_id,
+        })));
+      } finally {
+        setLoadingData(false);
+      }
+    }
+
+    fetchTienda();
+  }, [tiendaId]);
+
+  const tienda = tiendaData ?? miTiendaLocal;
+  const productos = tiendaData
+    ? productosData
     : tienda
       ? misProductosLocal.filter((p) => p.tiendaId === tienda.id)
       : [];
@@ -47,6 +119,15 @@ export default function TiendaContent({
     if (!productoId) return null;
     return productos.find((p) => p.id === productoId) ?? null;
   });
+
+  if (loadingData) {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-screen gap-4 px-4 text-center">
+        <div className="w-16 h-16 rounded-full bg-brand/20 animate-pulse" />
+        <p className="text-muted text-sm">Cargando tienda...</p>
+      </main>
+    );
+  }
 
   if (!tienda) {
     return (

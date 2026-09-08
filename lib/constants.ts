@@ -66,8 +66,9 @@ export function getAcentoMeta(key?: string): AcentoMeta {
 // /tienda/mi-tienda route instead, which resolves the store from
 // localStorage rather than a route param.
 // ---------------------------------------------------------------------------
+/** Returns the URL for a store's public page — works in static hosting */
 export function tiendaHref(id: string): string {
-  return id.startsWith('local-') ? '/tienda/mi-tienda' : `/tienda/${id}`;
+  return `/tienda/ver?id=${id}`;
 }
 
 // ---------------------------------------------------------------------------

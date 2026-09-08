@@ -1,0 +1,11 @@
+Options -MultiViews
+RewriteEngine On
+
+# Redirect old /tienda/{id} links to the new static query-param URL
+# e.g. /tienda/abc123  ->  /tienda/ver/?id=abc123
+RewriteRule ^tienda/([^/]+)/?$ /tienda/ver/?id= [R=301,L,QSA]
+
+# SPA fallback: serve index.html for any path that has no matching file/dir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L,QSA]
