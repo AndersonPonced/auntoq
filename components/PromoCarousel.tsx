@@ -97,6 +97,7 @@ export default function PromoCarousel() {
                 src={promo.bgUrl}
                 alt={promo.title}
                 fill
+                priority={idx === 0}
                 className={promo.fullImage ? 'object-contain' : 'object-cover'}
               />
               {!promo.fullImage && (

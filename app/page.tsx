@@ -31,26 +31,28 @@ export default function HomePage() {
     const session = getSession();
     setUser(session);
 
-    // Si hay sesión pero no tiene tienda, lo llevamos a crearla
-    if (session) {
-      supabase
-        .from('tiendas')
-        .select('id, logo_url')
-        .eq('owner_id', session.id)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (!data) { router.push('/registro'); return; }
-          setMiLogoUrl(data.logo_url ?? null);
-        });
-    }
-
-    // Cargar todas las tiendas desde Supabase
+    // Una sola query trae todas las tiendas (con límite).
+    // Si hay sesión, filtramos la del dueño desde los datos ya cargados
+    // → elimina la segunda llamada redundante a Supabase.
     supabase
       .from('tiendas')
       .select('*')
       .order('created_at', { ascending: false })
+      .limit(50)
       .then(({ data }) => {
-        setTiendas((data ?? []).map((t: any) => ({
+        const todas = data ?? [];
+
+        // Detectar tienda del usuario logueado dentro de los datos ya cargados
+        if (session) {
+          const miTienda = todas.find((t: any) => t.owner_id === session.id);
+          if (!miTienda) {
+            router.push('/registro');
+            return;
+          }
+          setMiLogoUrl(miTienda.logo_url ?? null);
+        }
+
+        setTiendas(todas.map((t: any) => ({
           id: t.id,
           nombre: t.nombre,
           categoria: t.categoria,
