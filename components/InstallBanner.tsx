@@ -17,6 +17,15 @@ export default function InstallBanner() {
   const [isStandalone, setIsStandalone] = useState(true); // Default true to avoid flash
 
   useEffect(() => {
+    // Register Service Worker to enable PWA install prompt on Android
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+          console.error('Service Worker registration failed:', err);
+        });
+      });
+    }
+
     // Check if running as PWA
     const standalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
     setIsStandalone(standalone);
