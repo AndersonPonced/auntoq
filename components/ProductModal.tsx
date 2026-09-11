@@ -222,7 +222,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
         </div>
 
         {/* Info */}
-        <div className="p-5 space-y-3">
+        <div className="p-5 pb-8 space-y-4 flex-1 overflow-y-auto overscroll-contain">
           <div className="flex items-start justify-between gap-3">
             <h2 className="font-headline font-bold text-primary text-xl leading-tight flex-1">
               {producto.nombre}
