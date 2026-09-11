@@ -45,11 +45,9 @@ export default function HomePage() {
         // Detectar tienda del usuario logueado dentro de los datos ya cargados
         if (session) {
           const miTienda = todas.find((t: any) => t.owner_id === session.id);
-          if (!miTienda) {
-            router.push('/registro');
-            return;
+          if (miTienda) {
+            setMiLogoUrl(miTienda.logo_url ?? null);
           }
-          setMiLogoUrl(miTienda.logo_url ?? null);
         }
 
         setTiendas(todas.map((t: any) => ({
