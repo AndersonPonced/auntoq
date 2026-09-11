@@ -95,7 +95,7 @@ export default function SignupPage() {
       setError(error);
       setLoading(false);
     } else {
-      router.push('/registro');
+      router.push('/perfil');
     }
   };
 
