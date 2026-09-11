@@ -1,13 +1,13 @@
+<IfModule mod_rewrite.c>
 Options -MultiViews
 RewriteEngine On
 
-# ── Redirigir links viejos /tienda/{id} al nuevo formato /tienda/ver/?id={id}
-# EXCLUYE /tienda/ver y /tienda/mi-tienda para evitar loop infinito
-RewriteCond %{REQUEST_URI} !tienda/ver
-RewriteCond %{REQUEST_URI} !tienda/mi-tienda
-RewriteRule ^/?tienda/([^/]+)/?$ /tienda/ver/?id=$1 [R=301,L,QSA]
+# 1. Redirigir SOLO si es un UUID (letras a-f, numeros y guiones). 
+# Esto excluye automaticamente palabras como "ver" o "mi-tienda" y evita los bucles.
+RewriteRule ^/?tienda/([0-9a-fA-F-]+)/?$ /tienda/ver/?id=$1 [R=301,L]
 
-# ── SPA fallback: servir index.html para rutas sin archivo real
+# 2. SPA fallback: servir index.html para rutas que no son archivos reales
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /index.html [L,QSA]
+RewriteRule ^(.*)$ /index.html [L]
+</IfModule>
