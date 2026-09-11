@@ -3,9 +3,9 @@ RewriteEngine On
 
 # ── Redirigir links viejos /tienda/{id} al nuevo formato /tienda/ver/?id={id}
 # EXCLUYE /tienda/ver y /tienda/mi-tienda para evitar loop infinito
-RewriteCond %{REQUEST_URI} !^/tienda/ver
-RewriteCond %{REQUEST_URI} !^/tienda/mi-tienda
-RewriteRule ^tienda/([^/]+)/?$ /tienda/ver/?id= [R=301,L,QSA]
+RewriteCond %{REQUEST_URI} !tienda/ver
+RewriteCond %{REQUEST_URI} !tienda/mi-tienda
+RewriteRule ^/?tienda/([^/]+)/?$ /tienda/ver/?id=$1 [R=301,L,QSA]
 
 # ── SPA fallback: servir index.html para rutas sin archivo real
 RewriteCond %{REQUEST_FILENAME} !-f

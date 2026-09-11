@@ -159,20 +159,6 @@ function drawPill(
   ctx.textBaseline = 'alphabetic';
 }
 
-/** Pseudo-random but stable per-call scatter of a decorative glyph across the canvas. */
-function scatterGlyphs(
-  ctx: CanvasRenderingContext2D,
-  glyphs: string[],
-  spots: Array<[number, number, number]>, // [x, y, fontSize]
-) {
-  ctx.textAlign = 'center';
-  ctx.globalAlpha = 0.55;
-  spots.forEach(([x, y, size], i) => {
-    ctx.font = `${size}px sans-serif`;
-    ctx.fillText(glyphs[i % glyphs.length], x, y);
-  });
-  ctx.globalAlpha = 1;
-}
 
 export interface StoryImageInput {
   fotoUrl?: string;
