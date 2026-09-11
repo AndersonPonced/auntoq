@@ -4,6 +4,7 @@ interface SocialLinksProps {
   instagram?: string | null;
   facebook?: string | null;
   linktree?: string | null;
+  paginaWeb?: string | null;
   className?: string;
 }
 
@@ -11,8 +12,8 @@ const iconButtonClass =
   'flex items-center justify-center w-10 h-10 rounded-full bg-white border border-border shadow-sm text-primary hover:text-brand hover:border-brand transition-colors';
 
 /** Row of social-link icon buttons — renders nothing if none are set. */
-export default function SocialLinks({ instagram, facebook, linktree, className = '' }: SocialLinksProps) {
-  if (!instagram && !facebook && !linktree) return null;
+export default function SocialLinks({ instagram, facebook, linktree, paginaWeb, className = '' }: SocialLinksProps) {
+  if (!instagram && !facebook && !linktree && !paginaWeb) return null;
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -55,6 +56,20 @@ export default function SocialLinks({ instagram, facebook, linktree, className =
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 7h3a5 5 0 010 10h-3m-6 0H6a5 5 0 010-10h3" />
             <line x1="8" y1="12" x2="16" y2="12" strokeLinecap="round" />
+          </svg>
+        </a>
+      )}
+      {paginaWeb && (
+        <a
+          href={buildSocialUrl('paginaWeb', paginaWeb)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Página web"
+          className={iconButtonClass}
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path strokeLinecap="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
           </svg>
         </a>
       )}

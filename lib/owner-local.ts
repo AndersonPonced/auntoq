@@ -34,6 +34,7 @@ export interface TiendaInput {
   instagram?: string;
   facebook?: string;
   linktree?: string;
+  paginaWeb?: string;
   logoUrl?: string;
 }
 
@@ -132,6 +133,7 @@ export function saveMiTienda(input: TiendaInput): Tienda {
     instagram: input.instagram,
     facebook: input.facebook,
     linktree: input.linktree,
+    paginaWeb: input.paginaWeb,
     logoUrl: input.logoUrl ?? existing?.logoUrl,
   };
   safeSetItem(STORAGE_KEY, JSON.stringify(tienda));

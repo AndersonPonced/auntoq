@@ -94,9 +94,9 @@ export function buildWhatsAppLink(whatsapp: string, storeName: string): string {
 // Social links — owners can type either a bare username or a full URL;
 // this normalizes either into a clickable link per platform.
 // ---------------------------------------------------------------------------
-export type RedSocial = 'instagram' | 'facebook' | 'linktree';
+export type RedSocial = 'instagram' | 'facebook' | 'linktree' | 'paginaWeb';
 
-const SOCIAL_BASE_URL: Record<RedSocial, string> = {
+const SOCIAL_BASE_URL: Record<Exclude<RedSocial, 'paginaWeb'>, string> = {
   instagram: 'https://instagram.com/',
   facebook: 'https://facebook.com/',
   linktree: 'https://linktr.ee/',
@@ -104,6 +104,11 @@ const SOCIAL_BASE_URL: Record<RedSocial, string> = {
 
 export function buildSocialUrl(red: RedSocial, value: string): string {
   const trimmed = value.trim();
+  // Website URLs are stored as-is (always full URL)
+  if (red === 'paginaWeb') {
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+  }
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
   return `${SOCIAL_BASE_URL[red]}${trimmed.replace(/^@/, '')}`;
 }

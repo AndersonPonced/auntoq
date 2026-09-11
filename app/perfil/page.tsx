@@ -63,6 +63,7 @@ export default function PerfilPage() {
           instagram: data.instagram,
           facebook: data.facebook,
           linktree: data.linktree,
+          paginaWeb: data.pagina_web,
           logoUrl: data.logo_url,
           logoOriginalUrl: data.logo_original_url,
           activa: true,
@@ -107,6 +108,7 @@ export default function PerfilPage() {
       instagram: values.instagram || null,
       facebook: values.facebook || null,
       linktree: values.linktree || null,
+      pagina_web: values.paginaWeb || null,
       logo_url: values.logoUrl || null,
       logo_original_url: values.logoOriginalUrl || null,
     }).eq('id', tienda.id);
@@ -263,10 +265,10 @@ export default function PerfilPage() {
               </div>
             </div>
 
-            {(tienda.instagram || tienda.facebook || tienda.linktree) && (
+            {(tienda.instagram || tienda.facebook || tienda.linktree || tienda.paginaWeb) && (
               <div>
                 <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">Redes sociales</p>
-                <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} />
+                <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} paginaWeb={tienda.paginaWeb} />
               </div>
             )}
 

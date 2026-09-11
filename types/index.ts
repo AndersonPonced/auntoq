@@ -29,6 +29,8 @@ export interface Tienda {
   facebook?: string;
   /** Usuario o URL completa de Linktree. */
   linktree?: string;
+  /** URL completa de la página web del negocio. */
+  paginaWeb?: string;
   /** Logo cuadrado de la tienda (opcional) — usado en el lockup de marca al compartir un producto. */
   logoUrl?: string;
 }

@@ -43,6 +43,7 @@ export default function RegistroPage() {
           instagram: data.instagram,
           facebook: data.facebook,
           linktree: data.linktree,
+          paginaWeb: data.pagina_web,
           logoUrl: data.logo_url,
           logoOriginalUrl: data.logo_original_url,
         });
@@ -73,6 +74,7 @@ export default function RegistroPage() {
       instagram: values.instagram || null,
       facebook: values.facebook || null,
       linktree: values.linktree || null,
+      pagina_web: values.paginaWeb || null,
       logo_url: values.logoUrl || null,
       logo_original_url: values.logoOriginalUrl || null,
     };

@@ -27,6 +27,7 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
   const [instagram, setInstagram] = useState(initialValues?.instagram ?? '');
   const [facebook, setFacebook] = useState(initialValues?.facebook ?? '');
   const [linktree, setLinktree] = useState(initialValues?.linktree ?? '');
+  const [paginaWeb, setPaginaWeb] = useState(initialValues?.paginaWeb ?? '');
   const [fotoPortadaUrl, setFotoPortadaUrl] = useState<string | undefined>(initialValues?.fotoPortadaUrl);
   const [fotoOriginalUrl, setFotoOriginalUrl] = useState<string | undefined>(initialValues?.fotoOriginalUrl);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(initialValues?.logoUrl);
@@ -55,6 +56,7 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         instagram: instagram.trim() || undefined,
         facebook: facebook.trim() || undefined,
         linktree: linktree.trim() || undefined,
+        paginaWeb: paginaWeb.trim() || undefined,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar.');
@@ -191,6 +193,10 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         <div>
           <label htmlFor="f-linktree" className={labelClass}>Linktree</label>
           <input id="f-linktree" className={inputClass} value={linktree} onChange={(e) => setLinktree(e.target.value)} placeholder="Usuario o URL completa" />
+        </div>
+        <div>
+          <label htmlFor="f-pagina-web" className={labelClass}>Página web</label>
+          <input id="f-pagina-web" className={inputClass} value={paginaWeb} onChange={(e) => setPaginaWeb(e.target.value)} placeholder="https://tutienda.com" type="url" />
         </div>
       </div>
 
