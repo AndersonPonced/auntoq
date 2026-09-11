@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { Producto } from '@/types';
 import { formatPrice, tiendaHref } from '@/lib/constants';
@@ -28,6 +28,24 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
   const [compartiendo, setCompartiendo] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
   const fotos = producto.fotosUrls?.length ? producto.fotosUrls : (producto.fotoUrl ? [producto.fotoUrl] : []);
+
+  // ── Touch swipe para el carrusel de fotos en móvil ───────────────────────
+  const touchStartX = useRef<number | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || fotos.length <= 1) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      setCurrentImageIndex(i =>
+        diff > 0
+          ? (i === fotos.length - 1 ? 0 : i + 1)  // swipe izquierda → siguiente
+          : (i === 0 ? fotos.length - 1 : i - 1)   // swipe derecha → anterior
+      );
+    }
+    touchStartX.current = null;
+  };
 
   // Cerrar con Escape
   useEffect(() => {
@@ -151,8 +169,12 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
           </svg>
         </button>
 
-        {/* Image Carousel */}
-        <div className="relative w-full aspect-square bg-[#C7E7F7] flex-shrink-0">
+        {/* Image Carousel — soporta swipe táctil en móvil */}
+        <div
+          className="relative w-full aspect-square bg-[#C7E7F7] flex-shrink-0"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {fotos.length > 0 ? (
             <>
               <Image

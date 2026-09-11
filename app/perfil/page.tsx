@@ -12,6 +12,7 @@ import TiendaForm from '@/components/TiendaForm';
 import ProductoForm from '@/components/ProductoForm';
 import EmptyState from '@/components/EmptyState';
 import SocialLinks from '@/components/SocialLinks';
+import Toast from '@/components/Toast';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
 import { getSession } from '@/lib/auth';
@@ -365,9 +366,11 @@ export default function PerfilPage() {
       </div>
 
       {toast && (
-        <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-primary text-white text-sm font-medium px-4 py-2.5 rounded-full shadow-lg animate-fade-up">
-          {toast}
-        </div>
+        <Toast
+          message={toast.replace(' V', '')}
+          type={toast.toLowerCase().includes('error') ? 'error' : 'success'}
+          onClose={() => setToast(null)}
+        />
       )}
 
       {selectedProduct && tienda && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
@@ -120,6 +120,16 @@ export default function TiendaContent({
     if (!productoId) return null;
     return productos.find((p) => p.id === productoId) ?? null;
   });
+
+  // ── Scroll-to-top button ──────────────────────────────────────────────────
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const handleScroll = useCallback(() => {
+    setShowScrollTop(window.scrollY > 400);
+  }, []);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   if (loadingData) {
     return (
@@ -298,6 +308,19 @@ export default function TiendaContent({
         logoUrl={tienda.logoUrl}
         onClose={() => setSelectedProduct(null)}
       />
+    )}
+
+    {/* ── Volver arriba ─────────────────────────────────────────────────── */}
+    {showScrollTop && (
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Volver arriba"
+        className="fixed bottom-20 right-4 z-30 h-11 w-11 rounded-full bg-white border border-border shadow-lg flex items-center justify-center text-primary hover:text-brand hover:border-brand transition-all active:scale-95 md:bottom-8"
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
     )}
   </>
   );
