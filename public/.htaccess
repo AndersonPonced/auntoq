@@ -1,11 +1,13 @@
 Options -MultiViews
 RewriteEngine On
 
-# Redirect old /tienda/{id} links to the new static query-param URL
-# e.g. /tienda/abc123  ->  /tienda/ver/?id=abc123
+# ── Redirigir links viejos /tienda/{id} al nuevo formato /tienda/ver/?id={id}
+# EXCLUYE /tienda/ver y /tienda/mi-tienda para evitar loop infinito
+RewriteCond %{REQUEST_URI} !^/tienda/ver
+RewriteCond %{REQUEST_URI} !^/tienda/mi-tienda
 RewriteRule ^tienda/([^/]+)/?$ /tienda/ver/?id= [R=301,L,QSA]
 
-# SPA fallback: serve index.html for any path that has no matching file/dir
+# ── SPA fallback: servir index.html para rutas sin archivo real
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.html [L,QSA]
