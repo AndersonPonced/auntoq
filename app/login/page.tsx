@@ -81,7 +81,7 @@ export default function LoginPage() {
       setError(error);
       setLoading(false);
     } else {
-      router.push('/registro');
+      router.push('/perfil');
     }
   };
 
