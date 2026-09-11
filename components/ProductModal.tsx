@@ -67,10 +67,12 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
   );
   const waLink = `https://wa.me/${number}?text=${msg}`;
 
-  // Link back to this exact product — TiendaContent reads `?producto=` on
+  // Link back to this exact product - TiendaContent reads `?producto=` on
   // load and opens this same modal for whoever clicks it.
+  const baseUrl = tiendaHref(tiendaId);
+  const separator = baseUrl.includes('?') ? '&' : '?';
   const productUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}${tiendaHref(tiendaId)}?producto=${producto.id}`
+    ? `${window.location.origin}${baseUrl}${separator}producto=${producto.id}`
     : '';
   const groupCaption = `Mira "${producto.nombre}" (${formatPrice(producto.precio)}) de ${storeName} en Auntokke:\n${productUrl}`;
   // Text-only fallback for browsers that can't share files (mainly desktop) —
