@@ -216,52 +216,35 @@ export async function generateStoryImage(input: StoryImageInput): Promise<string
   const bodyFont = rootStyle.getPropertyValue('--font-body').trim() || 'sans-serif';
   const centerX = W / 2;
 
-  // ── Background: gradient + soft glow blobs + scattered sparkles ──────
-  const bgGradient = ctx.createLinearGradient(0, 0, 0, H);
-  bgGradient.addColorStop(0, input.acentoBase);
-  bgGradient.addColorStop(1, input.acentoDark);
+    // ── Background: Elegant cream gradient + soft blobs ──
+  const bgGradient = ctx.createLinearGradient(0, 0, W, H);
+  bgGradient.addColorStop(0, '#FDFBF7');
+  bgGradient.addColorStop(1, '#F4EAE0');
   ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, W, H);
 
+  // Soft blobs for the elegant wave effect
   ctx.save();
-  ctx.filter = 'blur(90px)';
-  ctx.globalAlpha = 0.45;
+  ctx.filter = 'blur(120px)';
+  ctx.globalAlpha = 0.6;
   ctx.fillStyle = '#FFFFFF';
   ctx.beginPath();
-  ctx.arc(-60, 120, 260, 0, Math.PI * 2);
+  ctx.arc(200, 200, 300, 0, Math.PI * 2);
   ctx.fill();
+  ctx.fillStyle = '#E8DCC8';
   ctx.beginPath();
-  ctx.arc(W + 40, H - 260, 300, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 0.3;
-  ctx.beginPath();
-  ctx.arc(W - 100, 200, 220, 0, Math.PI * 2);
+  ctx.arc(W - 100, H - 300, 400, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  scatterGlyphs(
-    ctx,
-    ['✨', '⭐️', '✨'],
-    [
-      [140, 210, 56],
-      [W - 150, 1620, 48],
-      [110, 1660, 44],
-    ],
-  );
-
-  // ── Card ───────────────────────────────────────────────────────────
-  // cardH must fit: badge + photo + gap + name(up to 2 lines) + price +
-  // store name + CTA pill, with room to spare before the card's bottom
-  // edge — otherwise the CTA pill spills onto the gradient background and
-  // can overlap the Auntokke lockup pinned near H (see the layout math
-  // this was tuned against, below).
+  // ── Card ──
   const cardX = 80;
-  const cardY = 280;
+  const cardY = 140;
   const cardW = W - cardX * 2;
-  const cardH = 1300;
+  const cardH = 1480;
 
   ctx.save();
-  ctx.shadowColor = 'rgba(0,0,0,0.25)';
+  ctx.shadowColor = 'rgba(0,0,0,0.06)';
   ctx.shadowBlur = 60;
   ctx.shadowOffsetY = 20;
   roundedRectPath(ctx, cardX, cardY, cardW, cardH, 48);
@@ -269,145 +252,74 @@ export async function generateStoryImage(input: StoryImageInput): Promise<string
   ctx.fill();
   ctx.restore();
 
-  const innerX = cardX + 40;
-  const innerW = cardW - 80;
-
-  // Category badge, top-left of the card.
-  let cursorY = cardY + 44;
-  if (input.categoriaEmoji && input.categoriaLabel) {
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    const badgeText = `${input.categoriaEmoji}  ${input.categoriaLabel}`;
-    ctx.font = `700 32px ${bodyFont}`;
-    const badgeTextWidth = ctx.measureText(badgeText).width;
-    const badgeH = 64;
-    const badgePad = 26;
-    roundedRectPath(ctx, innerX, cursorY, badgeTextWidth + badgePad * 2, badgeH, badgeH / 2);
-    ctx.fillStyle = `${input.acentoBase}1F`;
-    ctx.fill();
-    ctx.fillStyle = input.acentoDark;
-    ctx.fillText(badgeText, innerX + badgePad, cursorY + badgeH / 2 + 2);
-    ctx.textBaseline = 'alphabetic';
-    cursorY += badgeH + 28;
-  }
-
-  // Product photo, ringed in the accent color — or a placeholder tile if
-  // it fails to load (e.g. CORS). Sized well under the card's full width
-  // (not innerW) so there's still room below it for name/price/store/CTA
-  // without overflowing the card.
-  const photoSize = 600;
-  const photoX = centerX - photoSize / 2;
-  const photoY = cursorY;
+  // Card bottom half slight tint (optional, but gives that two-tone look)
   ctx.save();
-  roundedRectPath(ctx, photoX - 6, photoY - 6, photoSize + 12, photoSize + 12, 38);
-  ctx.strokeStyle = input.acentoBase;
-  ctx.lineWidth = 6;
-  ctx.stroke();
+  roundedRectPath(ctx, cardX, cardY, cardW, cardH, 48);
+  ctx.clip();
+  ctx.fillStyle = '#FCFAF6';
+  ctx.fillRect(cardX, cardY + 900, cardW, cardH - 900);
   ctx.restore();
+
+  // Top Tag: "Producto Destacado"
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#4A4A4A';
+  ctx.font = `44px ${headlineFont}`;
+  ctx.fillText('🏷️ Producto Destacado', cardX + 60, cardY + 70);
+  ctx.textBaseline = 'alphabetic';
+
+  // ── Product Photo ──
+  const photoSize = 800;
+  const photoX = centerX - photoSize / 2;
+  const photoY = cardY + 140;
+  
   try {
     if (!input.fotoUrl) throw new Error('sin foto');
     const img = await loadImageEl(input.fotoUrl);
     ctx.save();
-    roundedRectPath(ctx, photoX, photoY, photoSize, photoSize, 32);
+    roundedRectPath(ctx, photoX, photoY, photoSize, photoSize, 40);
     ctx.clip();
     drawImageCover(ctx, img, photoX, photoY, photoSize, photoSize);
     ctx.restore();
   } catch {
-    roundedRectPath(ctx, photoX, photoY, photoSize, photoSize, 32);
-    ctx.fillStyle = '#D6EFFB';
+    roundedRectPath(ctx, photoX, photoY, photoSize, photoSize, 40);
+    ctx.fillStyle = '#F0EBE1';
     ctx.fill();
     ctx.textAlign = 'center';
     ctx.font = `140px ${bodyFont}`;
-    ctx.fillText('🛍️', photoX + photoSize / 2, photoY + photoSize / 2 + 45);
+    ctx.fillStyle = '#CCCCCC';
+    ctx.fillText('📷', photoX + photoSize / 2, photoY + photoSize / 2 + 45);
   }
-  cursorY = photoY + photoSize + 84;
 
-  // Product name (up to 2 lines).
+  // ── Product Name ──
+  let cursorY = photoY + photoSize + 110;
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#0E2A52';
-  ctx.font = `900 56px ${headlineFont}`;
-  const nameLines = wrapCenteredText(ctx, input.nombre, centerX, cursorY, innerW - 20, 64);
-  cursorY += (nameLines - 1) * 64 + 96;
+  ctx.fillStyle = '#222222';
+  ctx.font = `500 52px ${headlineFont}`;
+  const nameLines = wrapCenteredText(ctx, input.nombre, centerX, cursorY, cardW - 80, 60);
+  cursorY += (nameLines - 1) * 60 + 90;
 
-  // Price.
-  ctx.fillStyle = input.acentoDark;
-  ctx.font = `900 76px ${headlineFont}`;
+  // ── Price ──
+  ctx.fillStyle = '#A67C52'; // Elegant gold/brown
+  ctx.font = `800 84px ${headlineFont}`;
   ctx.fillText(input.precioTexto, centerX, cursorY);
-  cursorY += 66;
+  cursorY += 90;
 
-  // Store name — with the store's own logo beside it, if it has one.
-  ctx.font = `600 34px ${bodyFont}`;
-  const storeNameWidth = ctx.measureText(input.storeName).width;
-  const logoSize = 52;
-  const logoGap = 16;
+  // ── Store Name ──
+  ctx.font = `400 38px ${bodyFont}`;
+  ctx.fillStyle = '#666666';
+  ctx.fillText(`🏪 ${input.storeName}`, centerX, cursorY);
+  cursorY += 90;
 
-  let logoImg: HTMLImageElement | null = null;
-  if (input.logoUrl) {
-    try {
-      logoImg = await loadImageEl(input.logoUrl);
-    } catch {
-      logoImg = null;
-    }
-  }
+  // ── WhatsApp CTA chip ──
+  // Slightly wider and taller pill to match the elegant look
+  drawPill(ctx, centerX, cursorY, 'Pídelo por WhatsApp  💬', `600 36px ${bodyFont}`, '#25D366', '#FFFFFF');
 
-  const rowWidth = logoImg ? logoSize + logoGap + storeNameWidth : storeNameWidth;
-  const rowStartX = centerX - rowWidth / 2;
-
-  if (logoImg) {
-    const logoCenterY = cursorY - 12;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(rowStartX + logoSize / 2, logoCenterY, logoSize / 2, 0, Math.PI * 2);
-    ctx.clip();
-    drawImageCover(ctx, logoImg, rowStartX, logoCenterY - logoSize / 2, logoSize, logoSize);
-    ctx.restore();
-    ctx.beginPath();
-    ctx.arc(rowStartX + logoSize / 2, logoCenterY, logoSize / 2, 0, Math.PI * 2);
-    ctx.strokeStyle = input.acentoBase;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = '#4C6B8F';
-  ctx.textAlign = 'left';
-  ctx.fillText(input.storeName, rowStartX + (logoImg ? logoSize + logoGap : 0), cursorY);
+  // ── Auntokke lockup, bottom of the frame ──
+  ctx.fillStyle = '#4A433A';
   ctx.textAlign = 'center';
-  cursorY += 60;
-
-  // WhatsApp CTA chip.
-  drawPill(ctx, centerX, cursorY, '📲  Pídelo por WhatsApp', `700 32px ${bodyFont}`, '#25D366', '#FFFFFF');
-
-  // ── Auntokke logo lockup, bottom of the frame ─────────────────────
-  // Real brand logo (same file as the app header), on a white pill so it
-  // stays legible no matter what colors the logo art itself uses.
-  try {
-    const logoImg = await loadImageEl('/logo.png');
-    const targetH = 64;
-    const targetW = (logoImg.width / logoImg.height) * targetH;
-    const padX = 28;
-    const padY = 16;
-    const boxW = targetW + padX * 2;
-    const boxH = targetH + padY * 2;
-    const boxX = centerX - boxW / 2;
-    const boxY = H - 240;
-    roundedRectPath(ctx, boxX, boxY, boxW, boxH, boxH / 2);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fill();
-    ctx.drawImage(logoImg, boxX + padX, boxY + padY, targetW, targetH);
-  } catch {
-    // Logo failed to load — fall back to a plain text lockup.
-    ctx.fillStyle = '#FFFFFF';
-    ctx.textAlign = 'center';
-    ctx.font = `900 52px ${headlineFont}`;
-    ctx.fillText('Auntokke', centerX, H - 190);
-  }
-
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.globalAlpha = 0.9;
-  ctx.font = `600 30px ${bodyFont}`;
-  ctx.fillText('Descúbrelo en Auntokke', centerX, H - 110);
-  ctx.globalAlpha = 1;
+  ctx.font = `400 64px ${headlineFont}`;
+  ctx.fillText('Auntokke', centerX, H - 120);
 
   return canvas.toDataURL('image/png');
 }
