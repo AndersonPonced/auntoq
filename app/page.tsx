@@ -1,261 +1,385 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
-import SearchBar from '@/components/SearchBar';
-import CategoryChips from '@/components/CategoryChips';
-import StoreCard from '@/components/StoreCard';
-import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
-import type { Categoria } from '@/types';
+import type { Tienda, Producto, Categoria } from '@/types';
 import { getSession, signOut, type Usuario } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/client';
+import { CATEGORIAS, tiendaHref, getCategoryMeta } from '@/lib/constants';
+import HomeProductCard from '@/components/HomeProductCard';
+import HeroBanner from '@/components/HeroBanner';
 import InstallBanner from '@/components/InstallBanner';
 import Footer from '@/components/Footer';
-import PromoCarousel from '@/components/PromoCarousel';
-import { getCategoryMeta } from '@/lib/constants';
+import StoreCard from '@/components/StoreCard';
+import ProductModal from '@/components/ProductModal';
+import SearchBar from '@/components/SearchBar';
+
+// ─── Auntokke WhatsApp number (acts as the mega-store) ───────────────────────
+const AUNTOKKE_WA = '584121234567'; // ← reemplaza con tu número real
+
+// ─── Product category filters for the home catalog ───────────────────────────
+const HOME_CATS = [
+  { slug: 'todas', label: 'Todos', emoji: '🛍️' },
+  { slug: 'cocina', label: 'Cocina', emoji: '🍳' },
+  { slug: 'hogar', label: 'Hogar', emoji: '🏠' },
+  { slug: 'iluminacion', label: 'Iluminación', emoji: '💡' },
+  { slug: 'tecnologia', label: 'Tecnología', emoji: '📱' },
+  { slug: 'otros', label: 'Otros', emoji: '📦' },
+];
+
+// ─── Skeleton loader for product grid ────────────────────────────────────────
+function ProductSkeleton() {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse">
+      <div className="aspect-square bg-gray-100" />
+      <div className="p-4 space-y-3">
+        <div className="h-3 bg-gray-100 rounded w-3/4" />
+        <div className="h-3 bg-gray-100 rounded w-1/2" />
+        <div className="h-6 bg-gray-100 rounded w-1/3 mt-2" />
+        <div className="h-9 bg-gray-100 rounded-xl mt-2" />
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
-  const router = useRouter();
   const supabase = createClient();
 
-  const [selected, setSelected] = useState<Categoria | 'todas'>('todas');
   const [user, setUser] = useState<Usuario | null>(null);
   const [miLogoUrl, setMiLogoUrl] = useState<string | null>(null);
-  const [tiendas, setTiendas] = useState<any[]>([]);
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [tiendas, setTiendas] = useState<Tienda[]>([]);
+  const [megaTienda, setMegaTienda] = useState<{ whatsapp: string; acento: { base: string; dark: string } } | null>(null);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
+  const [catFilter, setCatFilter] = useState('todas');
+  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const session = getSession();
     setUser(session);
 
-    // Una sola query trae todas las tiendas (con límite).
-    // Si hay sesión, filtramos la del dueño desde los datos ya cargados
-    // → elimina la segunda llamada redundante a Supabase.
+    // 1. Buscar la tienda de Auntokke (owner "mega-store") y sus productos
     supabase
       .from('tiendas')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        const todas = data ?? [];
+      .limit(100)
+      .then(async ({ data: tData }) => {
+        const todas = tData ?? [];
 
-        // Detectar tienda del usuario logueado dentro de los datos ya cargados
+        // Detectar logo del usuario logueado
         if (session) {
-          const miTienda = todas.find((t: any) => t.owner_id === session.id);
-          if (miTienda) {
-            setMiLogoUrl(miTienda.logo_url ?? null);
-          }
+          const miT = todas.find((t: any) => t.owner_id === session.id);
+          if (miT) setMiLogoUrl(miT.logo_url ?? null);
         }
 
-        setTiendas(todas.map((t: any) => ({
+        // Para el home: la "mega tienda" es la primera tienda activa que
+        // encontramos (o puedes poner un ID fijo tuyo aquí)
+        const megaRaw = todas[0];
+        if (megaRaw) {
+          setMegaTienda({
+            whatsapp: megaRaw.whatsapp ?? AUNTOKKE_WA,
+            acento: { base: '#1D5FCC', dark: '#0E2A52' },
+          });
+
+          // Traer productos de la mega-tienda
+          const { data: prods } = await supabase
+            .from('productos')
+            .select('*')
+            .eq('tienda_id', megaRaw.id)
+            .order('created_at', { ascending: true });
+
+          setProductos((prods ?? []).map((p: any) => ({
+            id: p.id,
+            tiendaId: p.tienda_id,
+            nombre: p.nombre,
+            fotoUrl: p.foto_url ?? '',
+            fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
+            precio: p.precio,
+            descripcion: p.descripcion,
+            disponible: p.disponible,
+          })));
+        }
+
+        // Otras tiendas para la sección de "comunidad"
+        setTiendas(todas.slice(1, 7).map((t: any) => ({
           id: t.id,
           nombre: t.nombre,
           categoria: t.categoria,
           descripcionCorta: t.descripcion_corta,
           ubicacion: t.ubicacion,
           horario: t.horario,
-          fotoPortadaUrl: t.foto_portada_url,
+          fotoPortadaUrl: t.foto_portada_url ?? '',
           colorAcento: t.color_acento,
           activa: true,
+          whatsapp: t.whatsapp ?? '',
         })));
+
         setLoading(false);
       });
   }, []);
 
-  // Filtrar por categoría y búsqueda
-  const tiendadFiltradas = tiendas.filter((t) => {
-    const matchCategoria = selected === 'todas' || t.categoria === selected;
-    const matchQuery = !query || t.nombre.toLowerCase().includes(query.toLowerCase()) || t.descripcionCorta?.toLowerCase().includes(query.toLowerCase());
-    return matchCategoria && matchQuery;
-  });
+  // Filter products by search + category
+  const productosFiltrados = useMemo(() => {
+    return productos.filter((p) => {
+      const matchQuery = !query ||
+        p.nombre.toLowerCase().includes(query.toLowerCase()) ||
+        p.descripcion?.toLowerCase().includes(query.toLowerCase());
+      // Category filter is cosmetic for now (products don't have categories yet)
+      return matchQuery;
+    });
+  }, [productos, query, catFilter]);
 
-  // Contar por categoría
-  const counts = tiendas.reduce<Record<string, number>>((acc, t) => {
-    acc['todas'] = (acc['todas'] ?? 0) + 1;
-    acc[t.categoria] = (acc[t.categoria] ?? 0) + 1;
-    return acc;
-  }, {});
+  const whatsapp = megaTienda?.whatsapp ?? AUNTOKKE_WA;
+  const acento = megaTienda?.acento ?? { base: '#1D5FCC', dark: '#0E2A52' };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      
-      {/* ── Desktop Sidebar ── */}
-      <aside className="hidden lg:flex flex-col w-72 flex-shrink-0 sticky top-0 h-screen bg-white border-r border-[#A9CFEA]/30 px-6 py-8">
-        <div className="mb-8">
-          <h1 className="font-headline font-black text-[#1D5FCC] text-3xl tracking-tighter">Auntokke</h1>
-        </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
 
-        {/* Location selector */}
-        <div className="mb-8 p-4 bg-[#D6EFFB] rounded-2xl border border-[#A9CFEA]/20">
-          <span className="text-[11px] font-bold text-[#1D5FCC] uppercase tracking-wide">
-            Entregar en
-          </span>
-          <button className="flex items-center gap-1.5 text-left group w-full mt-1">
-            <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
-              AUNTOKKE
-            </span>
-            <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
+      {/* ─── HEADER ──────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-40 bg-[#0E2A52] shadow-lg">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8 h-16 flex items-center gap-4">
 
-        {/* Vertical Categories */}
-        <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
-          <h2 className="font-headline font-bold text-[#0E2A52] text-lg mb-4">Categorías</h2>
-          <div className="flex flex-col gap-2">
-            {['todas', ...Array.from(new Set(tiendas.map((t) => t.categoria)))].map((catId) => {
-              const meta = catId === 'todas' ? { label: 'Todas', emoji: '✨' } : getCategoryMeta(catId);
-              const count = counts[catId] || 0;
-              const isSelected = selected === catId;
-              
-              return (
-                <button
-                  key={catId}
-                  onClick={() => setSelected(catId as Categoria | 'todas')}
-                  className={`flex items-center justify-between w-full p-3 rounded-xl transition-all ${
-                    isSelected 
-                      ? 'bg-[#1D5FCC] text-white shadow-md' 
-                      : 'hover:bg-[#D6EFFB] text-[#0E2A52]'
-                  }`}
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <span className="font-bold text-xl text-white tracking-tight">Auntokke</span>
+          </Link>
+
+          {/* Search bar (desktop) */}
+          <div className="hidden md:flex flex-1 max-w-2xl mx-auto">
+            <div className="relative w-full">
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar productos..."
+                className="w-full h-10 pl-10 pr-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-blue-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white/20 transition"
+              />
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+            {user ? (
+              <>
+                <Link
+                  href="/perfil"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{meta.emoji}</span>
-                    <span className="font-semibold text-sm">{meta.label}</span>
-                  </div>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-[#A9CFEA]/20 text-[#4C6B8F]'}`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </aside>
-
-      {/* ── Main Content Area ── */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#FAFAFA] lg:bg-white">
-        
-        {/* ── Mobile Header ── */}
-        <header className="lg:hidden bg-white px-4 pt-6 pb-2 border-b border-[#A9CFEA]/20">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[11px] font-bold text-[#1D5FCC] uppercase tracking-wide">
-                Entregar en
-              </span>
-              <button className="flex items-center gap-1.5 text-left group">
-                <span className="font-headline font-black text-[#0E2A52] text-base truncate group-hover:text-[#1D5FCC] transition-colors">
-                  AUNTOKKE
-                </span>
-                <svg className="h-4 w-4 text-[#1D5FCC] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-            {/* User / Store Actions (Mobile) */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Link href="/perfil" aria-label="Mi tienda" className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] transition-all overflow-hidden">
-                {miLogoUrl ? (
-                  <Image src={miLogoUrl} alt="" width={40} height={40} className="w-full h-full object-cover" />
-                ) : (
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                )}
-              </Link>
-              {user ? (
-                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                </button>
-              ) : (
-                <Link href="/login" className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1D5FCC] text-white shadow-md hover:bg-[#0E2A52] transition-colors">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+                  {miLogoUrl ? (
+                    <Image src={miLogoUrl} alt="" width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                  )}
+                  Mi tienda
                 </Link>
-              )}
-            </div>
-          </div>
-        </header>
-
-        {/* ── Top Bar (Desktop & Mobile) ── */}
-        <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md shadow-sm border-b border-[#A9CFEA]/20">
-          <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-4">
-            <div className="flex-1 max-w-2xl">
-              <SearchBar defaultValue={query} onSearch={setQuery} />
-            </div>
-            
-            {/* User / Store Actions (Desktop) */}
-            <div className="hidden lg:flex items-center gap-3 flex-shrink-0 ml-4">
-              <Link href="/perfil" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-[#0E2A52] hover:bg-[#D6EFFB] font-bold text-sm transition-all">
-                {miLogoUrl ? (
-                  <Image src={miLogoUrl} alt="" width={20} height={20} className="h-5 w-5 rounded-full object-cover flex-shrink-0" />
-                ) : (
-                  <svg className="h-5 w-5 text-[#1D5FCC]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                )}
-                Mi Tienda
-              </Link>
-              {user ? (
-                <button onClick={() => { signOut(); setUser(null); }} className="flex items-center justify-center w-11 h-11 rounded-full bg-white border border-[#A9CFEA]/30 shadow-sm text-red-500 hover:bg-red-50 transition-all">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                <button
+                  onClick={() => { signOut(); setUser(null); }}
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-red-300 hover:bg-red-500/20 transition"
+                  aria-label="Cerrar sesión"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
                 </button>
-              ) : (
-                <Link href="/login" className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#1D5FCC] text-white font-bold text-sm shadow-md hover:bg-[#0E2A52] transition-colors">
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="hidden md:flex items-center px-4 py-2 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition">
                   Iniciar sesión
                 </Link>
-              )}
-            </div>
+                <Link href="/signup" className="flex items-center px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-300 text-[#0E2A52] text-sm font-bold transition shadow">
+                  Registrarse
+                </Link>
+              </>
+            )}
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menú"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
+              </svg>
+            </button>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col w-full max-w-[1440px] mx-auto">
-          {/* ── Carrusel de Promociones ── */}
-          <div className="w-full pt-4 lg:pt-6 lg:px-8">
-            <PromoCarousel />
+        {/* Mobile search */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar productos..."
+              className="w-full h-10 pl-10 pr-4 rounded-full bg-white/10 border border-white/20 text-white placeholder-blue-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+            />
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z" />
+            </svg>
           </div>
+        </div>
 
-          {/* ── Categorías (Mobile Only) ── */}
-          <div className="lg:hidden bg-white border-b border-border mt-2">
-            <div className="px-4 py-3">
-              <CategoryChips selected={selected} onChange={setSelected} counts={counts} />
-            </div>
-          </div>
-
-          {/* ── Instalar App ── */}
-          <div className="lg:px-8">
-            <InstallBanner />
-          </div>
-
-          {/* ── Tiendas ── */}
-          <div className="px-4 py-6 md:py-8 lg:px-8 flex-1">
-            <h2 className="font-headline font-bold text-[#0E2A52] text-2xl mb-6 hidden lg:block">
-              {query ? `Resultados para "${query}"` : selected === 'todas' ? 'Todas las tiendas' : `Tiendas de ${getCategoryMeta(selected as string).label}`}
-            </h2>
-
-            {loading ? (
-              <div className="flex justify-center py-20">
-                <div className="animate-spin h-8 w-8 text-brand rounded-full border-4 border-current border-t-transparent" />
-              </div>
-            ) : tiendadFiltradas.length === 0 ? (
-              <EmptyState
-                icon="🏪"
-                title={query ? 'Sin resultados' : 'Aún no hay tiendas'}
-                description={query ? `No encontramos tiendas con "${query}".` : 'Sé el primero en registrar tu negocio.'}
-              />
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#0a1f3d] border-t border-white/10 px-4 py-4 flex flex-col gap-3">
+            {user ? (
+              <>
+                <Link href="/perfil" className="text-white text-sm font-semibold py-2" onClick={() => setMobileMenuOpen(false)}>👤 Mi tienda</Link>
+                <button onClick={() => { signOut(); setUser(null); setMobileMenuOpen(false); }} className="text-red-300 text-sm font-semibold py-2 text-left">🚪 Cerrar sesión</button>
+              </>
             ) : (
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8 list-none p-0" role="list">
-                {tiendadFiltradas.map((t, i) => (
-                  <li key={t.id}>
-                    <StoreCard tienda={t} index={i} />
-                  </li>
-                ))}
-              </ul>
+              <>
+                <Link href="/login" className="text-white text-sm font-semibold py-2" onClick={() => setMobileMenuOpen(false)}>Iniciar sesión</Link>
+                <Link href="/signup" className="text-yellow-400 text-sm font-bold py-2" onClick={() => setMobileMenuOpen(false)}>Registrarse →</Link>
+              </>
             )}
           </div>
+        )}
+      </header>
+
+      {/* ─── CATEGORY NAV ────────────────────────────────────────────────────── */}
+      <nav className="bg-white border-b border-gray-100 shadow-sm sticky top-16 z-30">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+            {HOME_CATS.map((cat) => (
+              <button
+                key={cat.slug}
+                onClick={() => setCatFilter(cat.slug)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
+                  catFilter === cat.slug
+                    ? 'bg-[#1D5FCC] text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <span>{cat.emoji}</span>
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* ─── HERO ────────────────────────────────────────────────────────────── */}
+      <HeroBanner whatsapp={whatsapp} />
+
+      {/* ─── INSTALL BANNER ──────────────────────────────────────────────────── */}
+      <div className="max-w-[1440px] mx-auto w-full px-4 lg:px-8 mt-4">
+        <InstallBanner />
+      </div>
+
+      {/* ─── PRODUCTS SECTION ────────────────────────────────────────────────── */}
+      <section id="productos" className="max-w-[1440px] mx-auto w-full px-4 lg:px-8 py-10 flex-1">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="font-bold text-[#0E2A52] text-2xl lg:text-3xl">
+              {query ? `Resultados para "${query}"` : 'Nuestros Productos'}
+            </h2>
+            <p className="text-gray-500 text-sm mt-0.5">Calidad garantizada · Entrega a domicilio</p>
+          </div>
+          {!query && (
+            <span className="text-sm text-gray-400 hidden md:block">
+              {productosFiltrados.length} producto{productosFiltrados.length !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
 
-        {/* ── Footer ── */}
-        <Footer />
-      </main>
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
+          </div>
+        ) : productosFiltrados.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <span className="text-6xl mb-4">🔍</span>
+            <h3 className="font-bold text-xl text-gray-700 mb-2">Sin resultados</h3>
+            <p className="text-gray-500 text-sm max-w-xs">
+              {query ? `No encontramos productos con "${query}". Prueba con otro término.` : 'Pronto agregaremos más productos.'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
+            {productosFiltrados.map((p, i) => (
+              <HomeProductCard
+                key={p.id}
+                producto={p}
+                whatsapp={whatsapp}
+                storeName="Auntokke"
+                index={i}
+                onClick={() => setSelectedProduct(p)}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ─── STORES SECTION ──────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-gray-50 to-blue-50 border-t border-gray-100 py-16">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="font-bold text-[#0E2A52] text-2xl lg:text-3xl mb-2">
+              Tiendas de la comunidad
+            </h2>
+            <p className="text-gray-500 text-sm max-w-md mx-auto">
+              Negocios de vecinos que venden desde su casa
+            </p>
+          </div>
+
+          {tiendas.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {tiendas.map((t, i) => (
+                <StoreCard key={t.id} tienda={t} index={i} />
+              ))}
+            </div>
+          ) : null}
+
+          {/* CTA to open a store */}
+          <div className="flex flex-col md:flex-row items-center gap-8 bg-white rounded-3xl shadow-[0_4px_24px_rgba(29,95,204,0.10)] border border-blue-100 p-8 lg:p-12 max-w-3xl mx-auto">
+            <div className="text-center md:text-left flex-1">
+              <div className="text-4xl mb-4">🏪</div>
+              <h3 className="font-bold text-xl text-[#0E2A52] mb-2">¿Tienes un negocio?</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                Sé el primero en unirte a nuestra comunidad. Crea tu tienda gratis, agrega tus productos y recibe pedidos por WhatsApp desde hoy.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 flex-shrink-0 w-full md:w-auto">
+              <Link
+                href="/signup"
+                className="flex items-center justify-center gap-2 px-8 py-3.5 bg-[#1D5FCC] hover:bg-[#0E2A52] text-white font-bold text-[15px] rounded-2xl shadow-lg transition-all active:scale-95 whitespace-nowrap"
+              >
+                Abrir mi tienda gratis →
+              </Link>
+              <Link
+                href="/login"
+                className="flex items-center justify-center gap-2 px-8 py-3.5 border border-gray-200 text-gray-600 font-semibold text-[14px] rounded-2xl hover:bg-gray-50 transition-all whitespace-nowrap"
+              >
+                Ya tengo cuenta
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── PRODUCT MODAL ───────────────────────────────────────────────────── */}
+      {selectedProduct && (
+        <ProductModal
+          producto={selectedProduct}
+          storeName="Auntokke"
+          acento={acento}
+          whatsapp={whatsapp}
+          tiendaId={selectedProduct.tiendaId}
+          logoUrl={undefined}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
+      {/* ─── FOOTER ──────────────────────────────────────────────────────────── */}
+      <Footer />
     </div>
   );
 }
