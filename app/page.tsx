@@ -17,7 +17,7 @@ import PromoCarousel from '@/components/PromoCarousel';
 import CategoryChips from '@/components/CategoryChips';
 
 // ─── Auntokke WhatsApp number ─────────────────────────────────────────────────
-const AUNTOKKE_WA = '584121234567'; // ← reemplaza con tu número real
+const AUNTOKKE_WA = '584241337562'; // ← Número oficial de Auntokke
 
 // ─── Home category filter tabs ────────────────────────────────────────────────
 const HOME_CATS = [
