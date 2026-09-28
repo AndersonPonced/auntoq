@@ -83,6 +83,9 @@ export default function TiendaContent({
           linktree: t.linktree,
           paginaWeb: t.pagina_web,
           logoUrl: t.logo_url,
+          pagoMovilBanco: t.pago_movil_banco,
+          pagoMovilCedula: t.pago_movil_cedula,
+          pagoMovilTelefono: t.pago_movil_telefono,
           activa: true,
         });
 
