@@ -5,6 +5,7 @@ import Image from 'next/image';
 import type { Producto } from '@/types';
 import { formatPrice, tiendaHref } from '@/lib/constants';
 import { generateStoryImage } from '@/lib/image-utils';
+import { trackEvent } from '@/lib/analytics';
 
 interface ProductModalProps {
   producto: Producto;
@@ -47,16 +48,20 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
     touchStartX.current = null;
   };
 
-  // Cerrar con Escape
+  // Cerrar con Escape y rastrear vista
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
     document.body.style.overflow = 'hidden';
+    
+    // Rastrear la vista del producto (ignorado automáticamente si es el dueño)
+    trackEvent('vista_producto', producto.id, 'producto');
+    
     return () => {
       document.removeEventListener('keydown', handler);
       document.body.style.overflow = '';
     };
-  }, [onClose]);
+  }, [onClose, producto.id]);
 
   const unavailable = !producto.disponible;
 
@@ -66,6 +71,10 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
     `Hola, vi el catálogo de ${storeName} en Auntokke y quiero pedir:\n\n*${producto.nombre}* - ${formatPrice(producto.precio)}\n\n`
   );
   const waLink = `https://wa.me/${number}?text=${msg}`;
+
+  const handleWhatsAppClick = () => {
+    trackEvent('click_whatsapp', producto.id, 'producto');
+  };
 
   // Link back to this exact product - TiendaContent reads `?producto=` on
   // load and opens this same modal for whoever clicks it.
@@ -87,6 +96,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
    * if given) when file sharing isn't supported or the share attempt fails.
    */
   async function shareProductImage(caption: string, fallbackLink?: string) {
+    trackEvent('compartir_producto', producto.id, 'producto');
     setShareError(null);
     setCompartiendo(true);
     try {
@@ -247,6 +257,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleWhatsAppClick}
               className="flex items-center justify-center gap-2 w-full py-3.5 rounded-[14px] font-bold text-white text-[15px] transition-all active:scale-[0.98] shadow-lg"
               style={{ backgroundColor: '#25D366' }}
             >

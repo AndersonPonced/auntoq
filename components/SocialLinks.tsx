@@ -1,6 +1,9 @@
+'use client';
 import { buildSocialUrl } from '@/lib/constants';
+import { trackEvent } from '@/lib/analytics';
 
 interface SocialLinksProps {
+  tiendaId?: string;
   instagram?: string | null;
   facebook?: string | null;
   linktree?: string | null;
@@ -12,7 +15,7 @@ const iconButtonClass =
   'flex items-center justify-center w-10 h-10 rounded-full bg-white border border-border shadow-sm text-primary hover:text-brand hover:border-brand transition-colors';
 
 /** Row of social-link icon buttons — renders nothing if none are set. */
-export default function SocialLinks({ instagram, facebook, linktree, paginaWeb, className = '' }: SocialLinksProps) {
+export default function SocialLinks({ tiendaId, instagram, facebook, linktree, paginaWeb, className = '' }: SocialLinksProps) {
   if (!instagram && !facebook && !linktree && !paginaWeb) return null;
 
   return (
@@ -22,6 +25,7 @@ export default function SocialLinks({ instagram, facebook, linktree, paginaWeb, 
           href={buildSocialUrl('instagram', instagram)}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => tiendaId && trackEvent('click_instagram', tiendaId, 'tienda')}
           aria-label="Instagram"
           className={iconButtonClass}
         >

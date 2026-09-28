@@ -241,7 +241,7 @@ export default function TiendaContent({
               {(tienda.instagram || tienda.facebook || tienda.linktree || tienda.paginaWeb) && (
                 <div className="mb-6">
                   <p className="text-[11px] font-bold text-[#A9CFEA] uppercase tracking-wider mb-2">Redes sociales</p>
-                  <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} paginaWeb={tienda.paginaWeb} />
+                  <SocialLinks tiendaId={tienda.id} instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} paginaWeb={tienda.paginaWeb} />
                 </div>
               )}
 

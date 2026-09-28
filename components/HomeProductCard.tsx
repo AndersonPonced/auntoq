@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import type { Producto } from '@/types';
 import { formatPrice } from '@/lib/constants';
+import { trackEvent } from '@/lib/analytics';
 
 interface HomeProductCardProps {
   producto: Producto;
@@ -110,7 +111,10 @@ export default function HomeProductCard({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                trackEvent('click_whatsapp', producto.id, 'producto');
+              }}
               className="flex items-center justify-center gap-1 md:gap-2 w-full py-2 md:py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1ebe5a] text-white font-semibold text-[11px] md:text-[13px] transition-all active:scale-95 shadow-sm"
             >
               <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
