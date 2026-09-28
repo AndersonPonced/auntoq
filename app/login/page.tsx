@@ -94,9 +94,9 @@ export default function LoginPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-tl from-[#1D5FCC]/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
 
       <header className="w-full px-6 py-6 flex justify-between items-center z-10 animate-fade-in">
-        <Link href="/" className="transition-transform hover:scale-105 active:scale-95">
+        <div className="transition-transform hover:scale-105 active:scale-95">
           <AppLogo />
-        </Link>
+        </div>
         <Link href="/signup" className="text-sm font-bold text-[#1D5FCC] hover:text-[#0E2A52] transition-colors px-4 py-2 rounded-full hover:bg-[#1D5FCC]/10">
           Crear cuenta
         </Link>
