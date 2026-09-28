@@ -312,10 +312,12 @@ export default function PerfilPage() {
                   {tienda.pagoMovilCedula && (
                     <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
                       <div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Cédula / RIF</span>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">
+                          {tienda.pagoMovilCedula.toUpperCase().startsWith('J') || tienda.pagoMovilCedula.toUpperCase().startsWith('G') ? 'RIF' : 'Cédula'}
+                        </span>
                         <span className="text-sm font-semibold text-gray-700">{tienda.pagoMovilCedula}</span>
                       </div>
-                      <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula); setToast('Cédula copiada ✓'); }} className="text-[#1D5FCC] bg-[#D6EFFB] p-2 rounded-lg hover:bg-[#A9CFEA] active:scale-95 transition-all">
+                      <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula); setToast('Documento copiado ✓'); }} className="text-[#1D5FCC] bg-[#D6EFFB] p-2 rounded-lg hover:bg-[#A9CFEA] active:scale-95 transition-all">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                       </button>
                     </div>
@@ -333,7 +335,8 @@ export default function PerfilPage() {
                   )}
                   <button
                     onClick={() => {
-                      const text = `💳 *Datos de Pago Móvil*\nBanco: ${tienda.pagoMovilBanco || '-'}\nCédula/RIF: ${tienda.pagoMovilCedula || '-'}\nTeléfono: ${tienda.pagoMovilTelefono || '-'}`;
+                      const docLabel = tienda.pagoMovilCedula?.toUpperCase().startsWith('J') || tienda.pagoMovilCedula?.toUpperCase().startsWith('G') ? 'RIF' : 'Cédula';
+                      const text = `💳 *Datos de Pago Móvil*\nBanco: ${tienda.pagoMovilBanco || '-'}\n${docLabel}: ${tienda.pagoMovilCedula || '-'}\nTeléfono: ${tienda.pagoMovilTelefono || '-'}`;
                       navigator.clipboard.writeText(text);
                       setToast('Todos los datos copiados ✓');
                     }}

@@ -388,10 +388,12 @@ export default function TiendaContent({
               {tienda.pagoMovilCedula && (
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Cédula / RIF</p>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                      {tienda.pagoMovilCedula.toUpperCase().startsWith('J') || tienda.pagoMovilCedula.toUpperCase().startsWith('G') ? 'RIF' : 'Cédula'}
+                    </p>
                     <p className="font-bold text-gray-800">{tienda.pagoMovilCedula}</p>
                   </div>
-                  <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula!); setToast('Cédula/RIF copiado ✓'); }} className="text-[#1D5FCC] bg-[#F0F4FF] p-2 rounded-lg hover:bg-[#E5F0FF] active:scale-95 transition-all">
+                  <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula!); setToast('Documento copiado ✓'); }} className="text-[#1D5FCC] bg-[#F0F4FF] p-2 rounded-lg hover:bg-[#E5F0FF] active:scale-95 transition-all">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                   </button>
                 </div>
