@@ -10,6 +10,7 @@ import ShareButton from '@/components/ShareButton';
 import EmptyState from '@/components/EmptyState';
 import Footer from '@/components/Footer';
 import SocialLinks from '@/components/SocialLinks';
+import Toast from '@/components/Toast';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
@@ -110,6 +111,9 @@ export default function TiendaContent({
       ? misProductosLocal.filter((p) => p.tiendaId === tienda.id)
       : [];
 
+  const [showPagoMovil, setShowPagoMovil] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
   // Auto-abre el producto cuando se llega desde un link compartido
   // (?producto=<id>), ej. el botón "Compartir" del ProductModal. Se
   // inicializa perezosamente (no con un efecto) porque `productos` ya
@@ -130,6 +134,12 @@ export default function TiendaContent({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 2200);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   if (loadingData) {
     return (
@@ -248,7 +258,30 @@ export default function TiendaContent({
               <div className="hidden md:block">
                 <WhatsAppButton whatsapp={tienda.whatsapp} storeName={tienda.nombre} />
               </div>
+
+              {(tienda.pagoMovilBanco || tienda.pagoMovilCedula || tienda.pagoMovilTelefono) && (
+                <div className="mt-3 hidden md:block">
+                  <button
+                    onClick={() => setShowPagoMovil(true)}
+                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-[14px] bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-[15px] transition-all active:scale-[0.98]"
+                  >
+                    💳 Ver Datos de Pago
+                  </button>
+                </div>
+              )}
             </div>
+            
+            {/* Mobile Pago Movil Button (shows in the info block on mobile) */}
+            {(tienda.pagoMovilBanco || tienda.pagoMovilCedula || tienda.pagoMovilTelefono) && (
+              <div className="md:hidden bg-white px-5 pb-5">
+                <button
+                  onClick={() => setShowPagoMovil(true)}
+                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-[14px] bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-[15px] transition-all active:scale-[0.98]"
+                >
+                  💳 Ver Datos de Pago
+                </button>
+              </div>
+            )}
           </div>
 
           {/* ── Catalog (Main Content on Desktop) ── */}
@@ -322,6 +355,70 @@ export default function TiendaContent({
         </svg>
       </button>
     )}
+    {/* ── Pago Móvil modal ── */}
+    {showPagoMovil && (
+      <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setShowPagoMovil(false)} />
+        {/* Modal */}
+        <div className="relative w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-8 duration-300">
+          <div className="p-6">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="font-headline font-bold text-2xl text-[#0E2A52]">Pago Móvil</h3>
+                <p className="text-sm text-gray-500 mt-1">Datos para transferencias</p>
+              </div>
+              <button onClick={() => setShowPagoMovil(false)} className="p-2 -mr-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {tienda.pagoMovilBanco && (
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Banco</p>
+                    <p className="font-bold text-gray-800">{tienda.pagoMovilBanco}</p>
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilBanco!); setToast('Banco copiado ✓'); }} className="text-[#1D5FCC] bg-[#F0F4FF] p-2 rounded-lg hover:bg-[#E5F0FF] active:scale-95 transition-all">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </button>
+                </div>
+              )}
+              {tienda.pagoMovilCedula && (
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Cédula / RIF</p>
+                    <p className="font-bold text-gray-800">{tienda.pagoMovilCedula}</p>
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula!); setToast('Cédula/RIF copiado ✓'); }} className="text-[#1D5FCC] bg-[#F0F4FF] p-2 rounded-lg hover:bg-[#E5F0FF] active:scale-95 transition-all">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </button>
+                </div>
+              )}
+              {tienda.pagoMovilTelefono && (
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Teléfono</p>
+                    <p className="font-bold text-gray-800">{tienda.pagoMovilTelefono}</p>
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilTelefono!); setToast('Teléfono copiado ✓'); }} className="text-[#1D5FCC] bg-[#F0F4FF] p-2 rounded-lg hover:bg-[#E5F0FF] active:scale-95 transition-all">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <button onClick={() => setShowPagoMovil(false)} className="w-full mt-6 py-4 rounded-[14px] bg-gray-900 text-white font-bold text-[15px] hover:bg-black transition-colors">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* ── Toast notifications ── */}
+    {toast && <Toast message={toast} onClose={() => setToast(null)} />}
   </>
   );
 }

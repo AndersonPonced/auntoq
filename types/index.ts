@@ -23,6 +23,9 @@ export interface Tienda {
   activa: boolean;
   /** Clave de una paleta de lib/constants.ts#ACENTOS. Si falta, se usa la paleta por defecto ('azul'). */
   colorAcento?: string;
+  pagoMovilBanco?: string;
+  pagoMovilCedula?: string;
+  pagoMovilTelefono?: string;
   /** Usuario (sin @) o URL completa de Instagram. */
   instagram?: string;
   /** Usuario o URL completa de Facebook. */

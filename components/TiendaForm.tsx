@@ -32,6 +32,12 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
   const [fotoOriginalUrl, setFotoOriginalUrl] = useState<string | undefined>(initialValues?.fotoOriginalUrl);
   const [logoUrl, setLogoUrl] = useState<string | undefined>(initialValues?.logoUrl);
   const [logoOriginalUrl, setLogoOriginalUrl] = useState<string | undefined>(initialValues?.logoOriginalUrl);
+  
+  // Pago Móvil
+  const [pagoMovilBanco, setPagoMovilBanco] = useState(initialValues?.pagoMovilBanco ?? '');
+  const [pagoMovilCedula, setPagoMovilCedula] = useState(initialValues?.pagoMovilCedula ?? '');
+  const [pagoMovilTelefono, setPagoMovilTelefono] = useState(initialValues?.pagoMovilTelefono ?? '');
+  
   const [error, setError] = useState('');
 
   function handleSubmit(e: FormEvent) {
@@ -53,6 +59,9 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         logoUrl,
         logoOriginalUrl,
         colorAcento,
+        pagoMovilBanco: pagoMovilBanco.trim() || undefined,
+        pagoMovilCedula: pagoMovilCedula.trim() || undefined,
+        pagoMovilTelefono: pagoMovilTelefono.trim() || undefined,
         instagram: instagram.trim() || undefined,
         facebook: facebook.trim() || undefined,
         linktree: linktree.trim() || undefined,
@@ -177,8 +186,28 @@ export default function TiendaForm({ initialValues, submitLabel, onSubmit, onCan
         <input id="f-horario" className={inputClass} value={horario} onChange={(e) => setHorario(e.target.value)} placeholder="Ej. Lun-Sáb 8am-6pm" />
       </div>
 
+      {/* ── Pago Móvil ── */}
+      <div className="space-y-3 pt-1 border-t border-border mt-4">
+        <p className="text-xs font-semibold text-brand uppercase tracking-wide">
+          Pago Móvil <span className="font-normal normal-case text-muted">(opcional)</span>
+        </p>
+        <p className="text-xs text-muted -mt-2 mb-2">Para que tus clientes puedan ver tus datos de pago rápido.</p>
+        <div>
+          <label htmlFor="f-pm-banco" className={labelClass}>Banco</label>
+          <input id="f-pm-banco" className={inputClass} value={pagoMovilBanco} onChange={(e) => setPagoMovilBanco(e.target.value)} placeholder="Ej. Banesco, Mercantil, BDV..." />
+        </div>
+        <div>
+          <label htmlFor="f-pm-cedula" className={labelClass}>Cédula / RIF</label>
+          <input id="f-pm-cedula" className={inputClass} value={pagoMovilCedula} onChange={(e) => setPagoMovilCedula(e.target.value)} placeholder="Ej. V12345678" />
+        </div>
+        <div>
+          <label htmlFor="f-pm-telefono" className={labelClass}>Teléfono</label>
+          <input id="f-pm-telefono" className={inputClass} value={pagoMovilTelefono} onChange={(e) => setPagoMovilTelefono(e.target.value)} placeholder="Ej. 04141234567" type="tel" />
+        </div>
+      </div>
+
       {/* ── Redes sociales ── */}
-      <div className="space-y-3 pt-1">
+      <div className="space-y-3 pt-1 border-t border-border mt-4">
         <p className="text-xs font-semibold text-muted uppercase tracking-wide">
           Redes sociales <span className="font-normal normal-case">(opcional)</span>
         </p>

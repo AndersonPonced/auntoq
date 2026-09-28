@@ -69,6 +69,9 @@ export default function PerfilPage() {
           paginaWeb: data.pagina_web,
           logoUrl: data.logo_url,
           logoOriginalUrl: data.logo_original_url,
+          pagoMovilBanco: data.pago_movil_banco,
+          pagoMovilCedula: data.pago_movil_cedula,
+          pagoMovilTelefono: data.pago_movil_telefono,
           activa: true,
         };
         setTienda(t);
@@ -118,6 +121,9 @@ export default function PerfilPage() {
       pagina_web: values.paginaWeb || null,
       logo_url: values.logoUrl || null,
       logo_original_url: values.logoOriginalUrl || null,
+      pago_movil_banco: values.pagoMovilBanco || null,
+      pago_movil_cedula: values.pagoMovilCedula || null,
+      pago_movil_telefono: values.pagoMovilTelefono || null,
     }).eq('id', tienda.id);
 
     if (!error) {
@@ -279,13 +285,26 @@ export default function PerfilPage() {
               </div>
             )}
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => setShowAnalytics(!showAnalytics)}
                 className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#F0F4FF] hover:bg-[#E5F0FF] text-[#1D5FCC] font-bold text-sm transition-colors border border-[#D6EFFB]"
               >
                 📊 {showAnalytics ? 'Ocultar Analíticas' : 'Ver Analíticas'}
               </button>
+              {(tienda.pagoMovilBanco || tienda.pagoMovilCedula || tienda.pagoMovilTelefono) && (
+                <button
+                  onClick={() => {
+                    const text = `💳 *Datos de Pago Móvil*\nBanco: ${tienda.pagoMovilBanco || '-'}\nCédula/RIF: ${tienda.pagoMovilCedula || '-'}\nTeléfono: ${tienda.pagoMovilTelefono || '-'}`;
+                    navigator.clipboard.writeText(text);
+                    setToast('Datos copiados ✓');
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm transition-colors border border-gray-200"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  Copiar mis datos
+                </button>
+              )}
             </div>
 
             {showAnalytics && (

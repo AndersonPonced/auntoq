@@ -36,6 +36,9 @@ export interface TiendaInput {
   linktree?: string;
   paginaWeb?: string;
   logoUrl?: string;
+  pagoMovilBanco?: string;
+  pagoMovilCedula?: string;
+  pagoMovilTelefono?: string;
 }
 
 export interface ProductoInput {
