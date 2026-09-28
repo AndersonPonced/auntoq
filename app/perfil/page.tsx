@@ -292,20 +292,59 @@ export default function PerfilPage() {
               >
                 📊 {showAnalytics ? 'Ocultar Analíticas' : 'Ver Analíticas'}
               </button>
-              {(tienda.pagoMovilBanco || tienda.pagoMovilCedula || tienda.pagoMovilTelefono) && (
-                <button
-                  onClick={() => {
-                    const text = `💳 *Datos de Pago Móvil*\nBanco: ${tienda.pagoMovilBanco || '-'}\nCédula/RIF: ${tienda.pagoMovilCedula || '-'}\nTeléfono: ${tienda.pagoMovilTelefono || '-'}`;
-                    navigator.clipboard.writeText(text);
-                    setToast('Datos copiados ✓');
-                  }}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm transition-colors border border-gray-200"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                  Copiar mis datos
-                </button>
-              )}
             </div>
+
+            {(tienda.pagoMovilBanco || tienda.pagoMovilCedula || tienda.pagoMovilTelefono) && (
+              <div className="bg-white p-5 rounded-2xl border border-[#A9CFEA]/30 mt-4 shadow-sm">
+                <h3 className="font-bold text-[#0E2A52] mb-3 text-sm uppercase tracking-wide">💳 Tus Datos de Pago</h3>
+                <div className="space-y-2">
+                  {tienda.pagoMovilBanco && (
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                      <div>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Banco</span>
+                        <span className="text-sm font-semibold text-gray-700">{tienda.pagoMovilBanco}</span>
+                      </div>
+                      <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilBanco); setToast('Banco copiado ✓'); }} className="text-[#1D5FCC] bg-[#D6EFFB] p-2 rounded-lg hover:bg-[#A9CFEA] active:scale-95 transition-all">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                      </button>
+                    </div>
+                  )}
+                  {tienda.pagoMovilCedula && (
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                      <div>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Cédula / RIF</span>
+                        <span className="text-sm font-semibold text-gray-700">{tienda.pagoMovilCedula}</span>
+                      </div>
+                      <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilCedula); setToast('Cédula copiada ✓'); }} className="text-[#1D5FCC] bg-[#D6EFFB] p-2 rounded-lg hover:bg-[#A9CFEA] active:scale-95 transition-all">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                      </button>
+                    </div>
+                  )}
+                  {tienda.pagoMovilTelefono && (
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                      <div>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Teléfono</span>
+                        <span className="text-sm font-semibold text-gray-700">{tienda.pagoMovilTelefono}</span>
+                      </div>
+                      <button onClick={() => { navigator.clipboard.writeText(tienda.pagoMovilTelefono); setToast('Teléfono copiado ✓'); }} className="text-[#1D5FCC] bg-[#D6EFFB] p-2 rounded-lg hover:bg-[#A9CFEA] active:scale-95 transition-all">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                      </button>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      const text = `💳 *Datos de Pago Móvil*\nBanco: ${tienda.pagoMovilBanco || '-'}\nCédula/RIF: ${tienda.pagoMovilCedula || '-'}\nTeléfono: ${tienda.pagoMovilTelefono || '-'}`;
+                      navigator.clipboard.writeText(text);
+                      setToast('Todos los datos copiados ✓');
+                    }}
+                    className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-sm transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    Copiar todo el bloque
+                  </button>
+                </div>
+              </div>
+            )}
 
             {showAnalytics && (
               <AnalyticsDashboard tiendaId={tienda.id} productos={productos} />
