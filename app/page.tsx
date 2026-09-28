@@ -245,6 +245,22 @@ export default function HomePage() {
           )}
         </div>
 
+        {/* Stores section (mobile) */}
+        {tiendas.length > 0 && (
+          <div className="px-4 py-4 bg-gradient-to-b from-[#F0F4FF] to-[#FAFAFA] border-t border-[#A9CFEA]/20 mb-2">
+            <h2 className="font-headline font-bold text-[#0E2A52] text-[17px] mb-4">
+              🏪 Tiendas de la comunidad
+            </h2>
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-4 px-4">
+              {tiendas.map((t, i) => (
+                <div key={t.id} className="min-w-[280px] max-w-[280px] snap-center flex-shrink-0">
+                  <StoreCard tienda={t} index={i} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Stores CTA (mobile) */}
         <div className="mx-3 mb-4 bg-white rounded-3xl border border-[#A9CFEA]/30 shadow-sm p-5">
           <div className="flex items-center gap-3 mb-3">
