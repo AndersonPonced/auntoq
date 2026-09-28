@@ -51,7 +51,7 @@ export default function PerfilPage() {
         .maybeSingle();
 
       if (data) {
-        setTienda({
+        const t = {
           id: data.id,
           nombre: data.nombre,
           categoria: data.categoria,
@@ -68,7 +68,11 @@ export default function PerfilPage() {
           logoUrl: data.logo_url,
           logoOriginalUrl: data.logo_original_url,
           activa: true,
-        });
+        };
+        setTienda(t);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auntoque_mi_tienda', JSON.stringify(t));
+        }
 
         // Cargar productos de esta tienda
         const { data: prods } = await supabase
