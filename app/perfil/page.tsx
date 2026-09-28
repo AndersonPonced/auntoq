@@ -13,6 +13,7 @@ import ProductoForm from '@/components/ProductoForm';
 import EmptyState from '@/components/EmptyState';
 import SocialLinks from '@/components/SocialLinks';
 import Toast from '@/components/Toast';
+import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
 import { getSession } from '@/lib/auth';
@@ -25,6 +26,7 @@ export default function PerfilPage() {
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const [agregandoProducto, setAgregandoProducto] = useState(false);
   const [editandoProductoId, setEditandoProductoId] = useState<string | null>(null);
   const [confirmandoEliminarId, setConfirmandoEliminarId] = useState<string | null>(null);
@@ -275,6 +277,19 @@ export default function PerfilPage() {
                 <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">Redes sociales</p>
                 <SocialLinks instagram={tienda.instagram} facebook={tienda.facebook} linktree={tienda.linktree} paginaWeb={tienda.paginaWeb} />
               </div>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowAnalytics(!showAnalytics)}
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#F0F4FF] hover:bg-[#E5F0FF] text-[#1D5FCC] font-bold text-sm transition-colors border border-[#D6EFFB]"
+              >
+                📊 {showAnalytics ? 'Ocultar Analíticas' : 'Ver Analíticas'}
+              </button>
+            </div>
+
+            {showAnalytics && (
+              <AnalyticsDashboard tiendaId={tienda.id} productos={productos} />
             )}
 
             <hr className="border-border" />
