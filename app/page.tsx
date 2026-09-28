@@ -95,7 +95,7 @@ export default function HomePage() {
           })));
         }
 
-        setTiendas(todas.slice(1, 7).map((t: any) => ({
+        setTiendas(todas.slice(0, 6).map((t: any) => ({
           id: t.id,
           nombre: t.nombre,
           categoria: t.categoria,
