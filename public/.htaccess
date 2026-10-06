@@ -1,8 +1,17 @@
 RewriteEngine On
 RewriteBase /
 
-# Fallback for @ handles to serve the 404.html Next.js app
-RewriteRule ^@([^/]+)/?$ /404.html [L]
+# If the file or directory exists, serve it
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# Optional: Make sure all other 404s go to Next.js 404 page
+# For Hostinger content negotiation (in case they strip .html), explicitly route known .html files if they exist
+RewriteCond %{DOCUMENT_ROOT}/.html -f
+RewriteRule ^([^/]+)/?$ /.html [L]
+
+# For all other root-level paths (like /electro-pana) that didn't match files, route them to /404.html to let our Next.js App Router handle them as store slugs.
+RewriteRule ^([^/]+)/?$ /404.html [L]
+
+# Make sure all other 404s go to Next.js 404 page
 ErrorDocument 404 /404.html

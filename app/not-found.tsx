@@ -11,12 +11,17 @@ export default function NotFound() {
   useEffect(() => {
     setIsClient(true);
     const path = window.location.pathname;
-    if (path.startsWith('/@')) {
-      const parts = path.split('/');
-      const handlePart = parts.find(p => p.startsWith('@'));
-      if (handlePart) {
-        setHandle(handlePart.substring(1));
-      }
+    
+    // We only want to intercept root-level paths that could be store names
+    // e.g. "/electro-pana" (1 segment)
+    // We should NOT intercept deeper paths like "/tienda/ver" or "/api/auth"
+    const parts = path.split('/').filter(Boolean);
+    
+    // List of known static top-level routes that might 404 for some reason but aren't stores
+    const knownRoutes = ['login', 'registro', 'signup', 'perfil', 'buscar', 'categoria', 'tienda'];
+    
+    if (parts.length === 1 && !knownRoutes.includes(parts[0].toLowerCase())) {
+      setHandle(parts[0]);
     }
   }, []);
 
