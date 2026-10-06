@@ -49,6 +49,7 @@ export default function HomePage() {
   const [miLogoUrl, setMiLogoUrl] = useState<string | null>(null);
   const [productos, setProductos] = useState<Producto[]>([]);
   const [tiendas, setTiendas] = useState<Tienda[]>([]);
+  const [tiendasMap, setTiendasMap] = useState<Map<string, any>>(new Map());
   const [megaTienda, setMegaTienda] = useState<{ whatsapp: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -83,24 +84,27 @@ export default function HomePage() {
 
         if (adminStore) {
           setMegaTienda({ whatsapp: adminStore.whatsapp ?? AUNTOKKE_WA });
-
-          const { data: prods } = await supabase
-            .from('productos')
-            .select('*')
-            .eq('tienda_id', adminStore.id)
-            .order('created_at', { ascending: true });
-
-          setProductos((prods ?? []).map((p: any) => ({
-            id: p.id,
-            tiendaId: p.tienda_id,
-            nombre: p.nombre,
-            fotoUrl: p.foto_url ?? '',
-            fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
-            precio: p.precio,
-            descripcion: p.descripcion,
-            disponible: p.disponible,
-          })));
         }
+
+        // We fetch ALL products globally, mixing from all stores (newest first)
+        const { data: prods } = await supabase
+          .from('productos')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(200);
+
+        setTiendasMap(new Map(todas.map((t: any) => [t.id, t])));
+
+        setProductos((prods ?? []).map((p: any) => ({
+          id: p.id,
+          tiendaId: p.tienda_id,
+          nombre: p.nombre,
+          fotoUrl: p.foto_url ?? '',
+          fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
+          precio: p.precio,
+          descripcion: p.descripcion,
+          disponible: p.disponible,
+        })));
 
         setTiendas(todas.slice(0, 6).map((t: any) => ({
           id: t.id,
@@ -243,7 +247,8 @@ export default function HomePage() {
                 <HomeProductCard
                   key={p.id}
                   producto={p}
-                  whatsapp={whatsapp}
+                  whatsapp={tiendasMap.get(p.tiendaId)?.whatsapp || whatsapp}
+                  storeName={tiendasMap.get(p.tiendaId)?.nombre || 'Auntokke'}
                   index={i}
                   onClick={() => setSelectedProduct(p)}
                 />
@@ -452,11 +457,11 @@ export default function HomePage() {
       {selectedProduct && (
         <ProductModal
           producto={selectedProduct}
-          storeName="Auntokke"
+          storeName={tiendasMap.get(selectedProduct.tiendaId)?.nombre || 'Auntokke'}
           acento={acento}
-          whatsapp={whatsapp}
+          whatsapp={tiendasMap.get(selectedProduct.tiendaId)?.whatsapp || whatsapp}
           tiendaId={selectedProduct.tiendaId}
-          logoUrl={undefined}
+          logoUrl={tiendasMap.get(selectedProduct.tiendaId)?.logo_url || undefined}
           onClose={() => setSelectedProduct(null)}
         />
       )}
