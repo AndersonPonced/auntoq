@@ -73,14 +73,21 @@ export default function HomePage() {
           if (miT) setMiLogoUrl(miT.logo_url ?? null);
         }
 
-        const megaRaw = todas[0];
-        if (megaRaw) {
-          setMegaTienda({ whatsapp: megaRaw.whatsapp ?? AUNTOKKE_WA });
+        // Fetch the oldest store to act as the main "Mega Store" (Auntokke Admin store)
+        const { data: adminStore } = await supabase
+          .from('tiendas')
+          .select('*')
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .single();
+
+        if (adminStore) {
+          setMegaTienda({ whatsapp: adminStore.whatsapp ?? AUNTOKKE_WA });
 
           const { data: prods } = await supabase
             .from('productos')
             .select('*')
-            .eq('tienda_id', megaRaw.id)
+            .eq('tienda_id', adminStore.id)
             .order('created_at', { ascending: true });
 
           setProductos((prods ?? []).map((p: any) => ({
