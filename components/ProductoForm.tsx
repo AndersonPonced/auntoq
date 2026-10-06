@@ -79,8 +79,9 @@ export default function ProductoForm({
         nombre: nombre.trim(), 
         precio: precioNum, 
         descripcion: descripcion.trim() || null,
-        disponible, 
-        fotosUrls,
+        disponible,
+          categoria: categoria.trim() || undefined,
+          fotosUrls,
         fotoUrl: fotosUrls[0] // Main image fallback
       });
     } catch (err) {
@@ -250,3 +251,4 @@ export default function ProductoForm({
     </form>
   );
 }
+
