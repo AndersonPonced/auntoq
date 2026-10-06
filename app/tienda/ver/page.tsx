@@ -11,6 +11,7 @@ import TiendaContent from '../[id]/TiendaContent';
 function TiendaVerInner() {
   const params = useSearchParams();
   const idParam = params.get('id') ?? '';
+  const storeSlug = params.get('t') ?? '';
   // The ID might be masked like "nombre-de-tienda-uuid"
   // UUIDs are exactly 36 characters long, so we take the last 36 characters
   const id = idParam.length >= 36 ? idParam.slice(-36) : idParam;
@@ -18,6 +19,7 @@ function TiendaVerInner() {
   return (
     <TiendaContent
       tiendaId={id}
+      tiendaSlug={storeSlug}
       tiendaInicial={null}
       productosIniciales={[]}
     />

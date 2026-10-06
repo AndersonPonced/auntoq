@@ -12,19 +12,21 @@ import Footer from '@/components/Footer';
 import SocialLinks from '@/components/SocialLinks';
 import Toast from '@/components/Toast';
 import { useMiTienda, useMisProductos } from '@/lib/owner-local';
-import { getAcentoMeta, getCategoryMeta, tiendaHref } from '@/lib/constants';
+import { getAcentoMeta, getCategoryMeta, tiendaHref, slugify } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
 import type { Tienda, Producto } from '@/types';
 
 interface TiendaContentProps {
   /** ID de la tienda — usado para fetch client-side en export estático */
   tiendaId?: string;
+  tiendaSlug?: string;
   tiendaInicial: Tienda | null;
   productosIniciales: Producto[];
 }
 
 export default function TiendaContent({
   tiendaId,
+  tiendaSlug,
   tiendaInicial,
   productosIniciales,
 }: TiendaContentProps) {
@@ -45,14 +47,22 @@ export default function TiendaContent({
   // This runs on every page visit, ensuring the store info and products
   // are always current regardless of when the static build happened.
   useEffect(() => {
-    const id = tiendaId;
-    if (!id) return;
+    let id = tiendaId;
+    if (!id && !tiendaSlug) return;
 
     const supabase = createClient();
 
     async function fetchTienda() {
       setLoadingData(true);
       try {
+        if (!id && tiendaSlug) {
+          const { data: stores } = await supabase.from('tiendas').select('id, nombre');
+          const match = stores?.find(t => slugify(t.nombre) === tiendaSlug);
+          if (match) id = match.id;
+        }
+
+        if (!id) { setLoadingData(false); return; }
+
         const [{ data: t }, { data: prods }] = await Promise.all([
           supabase.from('tiendas').select('*').eq('id', id).maybeSingle(),
           supabase.from('productos').select('*').eq('tienda_id', id).order('created_at', { ascending: true }),
