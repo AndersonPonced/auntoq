@@ -1,13 +1,8 @@
-<IfModule mod_rewrite.c>
-Options -MultiViews
 RewriteEngine On
+RewriteBase /
 
-# 1. Redirigir SOLO si es un UUID (letras a-f, numeros y guiones). 
-# Esto excluye automaticamente palabras como "ver" o "mi-tienda" y evita los bucles.
-RewriteRule ^/?tienda/([0-9a-fA-F-]+)/?$ /tienda/ver/?id=$1 [R=301,L]
+# Fallback for @ handles to serve the 404.html Next.js app
+RewriteRule ^@([^/]+)/?$ /404.html [L]
 
-# 2. SPA fallback: servir index.html para rutas que no son archivos reales
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /index.html [L]
-</IfModule>
+# Optional: Make sure all other 404s go to Next.js 404 page
+ErrorDocument 404 /404.html

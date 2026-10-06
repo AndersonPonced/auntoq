@@ -73,7 +73,7 @@ export function slugify(text: string) {
 
 export function tiendaHref(id: string, nombre?: string): string {
   if (nombre) {
-    return `/tienda/ver?t=${slugify(nombre)}`;
+    return `/@${slugify(nombre)}`;
   }
   return `/tienda/ver?id=${id}`;
 }
