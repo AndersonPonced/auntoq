@@ -186,9 +186,20 @@ export default function ProductoForm({
           placeholder="Ej. Postres, Bebidas..."
           maxLength={30}
         />
-        <datalist id="p-categorias-list">
-          {categoriasExistentes.map(cat => <option key={cat} value={cat} />)}
-        </datalist>
+        {categoriasExistentes.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {categoriasExistentes.map(cat => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategoria(cat)}
+                className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${categoria === cat ? 'bg-brand text-white border-brand' : 'bg-surface text-muted border-border hover:border-brand/50 hover:text-primary'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>
