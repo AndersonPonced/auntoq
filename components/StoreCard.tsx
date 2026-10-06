@@ -77,7 +77,7 @@ export default function StoreCard({ tienda, index = 0, interactive = true }: Sto
 
   return (
     <Link
-      href={tiendaHref(tienda.id)}
+      href={tiendaHref(tienda.id, tienda.nombre)}
       id={`store-card-${tienda.id}`}
       className="group block bg-transparent active:scale-[0.98] transition-transform duration-300 animate-fade-up"
       style={{ animationDelay: `${index * 0.05}s` }}

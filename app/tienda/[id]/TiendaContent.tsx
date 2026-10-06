@@ -206,7 +206,7 @@ export default function TiendaContent({
             <ShareButton
               title={tienda.nombre}
               text={`Mira el catálogo de ${tienda.nombre} en Auntokke`}
-              url={tiendaHref(tienda.id)}
+              url={tiendaHref(tienda.id, tienda.nombre)}
             />
           </div>
         </div>

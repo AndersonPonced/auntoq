@@ -67,8 +67,8 @@ export function getAcentoMeta(key?: string): AcentoMeta {
 // localStorage rather than a route param.
 // ---------------------------------------------------------------------------
 /** Returns the URL for a store's public page — works in static hosting */
-export function tiendaHref(id: string): string {
-  return `/tienda/ver?id=${id}`;
+export function tiendaHref(id: string, nombre?: string): string {
+  if (nombre) { const slug = nombre.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); return `/tienda/ver?id=${slug}-${id}`; } return `/tienda/ver?id=${id}`;
 }
 
 // ---------------------------------------------------------------------------

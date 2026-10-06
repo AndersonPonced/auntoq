@@ -78,7 +78,7 @@ export default function ProductModal({ producto, storeName, acento, whatsapp, ti
 
   // Link back to this exact product - TiendaContent reads `?producto=` on
   // load and opens this same modal for whoever clicks it.
-  const baseUrl = tiendaHref(tiendaId);
+  const baseUrl = tiendaHref(tiendaId, storeName);
   const separator = baseUrl.includes('?') ? '&' : '?';
   const productUrl = typeof window !== 'undefined'
     ? `${window.location.origin}${baseUrl}${separator}producto=${producto.id}`
