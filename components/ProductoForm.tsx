@@ -7,6 +7,7 @@ import { uploadImage } from '@/lib/storage';
 import type { ProductoInput } from '@/lib/owner-local';
 
 interface ProductoFormProps {
+  categoriasExistentes?: string[];
   initialValues?: Partial<ProductoInput>;
   submitLabel: string;
   onSubmit: (values: ProductoInput) => void;
@@ -18,6 +19,7 @@ const inputClass =
 const labelClass = 'block text-sm font-medium text-primary mb-1.5';
 
 export default function ProductoForm({
+  categoriasExistentes = [],
   initialValues,
   submitLabel,
   onSubmit,
@@ -27,6 +29,7 @@ export default function ProductoForm({
   const [precio, setPrecio] = useState(initialValues?.precio?.toString() ?? '');
   const [descripcion, setDescripcion] = useState(initialValues?.descripcion ?? '');
   const [disponible, setDisponible] = useState(initialValues?.disponible ?? true);
+  const [categoria, setCategoria] = useState(initialValues?.categoria ?? '');
   
   // Use fotosUrls if available, otherwise fallback to fotoUrl, otherwise empty
   const [fotosUrls, setFotosUrls] = useState<string[]>(
@@ -167,6 +170,25 @@ export default function ProductoForm({
           onChange={(e) => setPrecio(e.target.value)}
           placeholder="Ej. 4.50"
         />
+      </div>
+
+      <div>
+        <label htmlFor="p-categoria" className={labelClass}>
+          Categoría (Opcional)
+        </label>
+        <input
+          id="p-categoria"
+          type="text"
+          list="p-categorias-list"
+          className={inputClass}
+          value={categoria}
+          onChange={(e) => setCategoria(e.target.value)}
+          placeholder="Ej. Postres, Bebidas..."
+          maxLength={30}
+        />
+        <datalist id="p-categorias-list">
+          {categoriasExistentes.map(cat => <option key={cat} value={cat} />)}
+        </datalist>
       </div>
 
       <div>

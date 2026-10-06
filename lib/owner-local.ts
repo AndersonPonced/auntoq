@@ -39,6 +39,7 @@ export interface TiendaInput {
   pagoMovilBanco?: string;
   pagoMovilCedula?: string;
   pagoMovilTelefono?: string;
+  categoriasPersonalizadas?: string[];
 }
 
 export interface ProductoInput {
@@ -50,6 +51,7 @@ export interface ProductoInput {
   fotoUrl?: string;
   /** Array of up to 4 data URLs. */
   fotosUrls?: string[];
+  categoria?: string;
 }
 
 // ---------------------------------------------------------------------------

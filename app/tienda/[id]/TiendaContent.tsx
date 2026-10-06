@@ -108,6 +108,7 @@ export default function TiendaContent({
           fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
           descripcion: p.descripcion,
           tiendaId: p.tienda_id,
+          categoria: p.categoria,
         })));
       } finally {
         setLoadingData(false);
@@ -339,17 +340,26 @@ export default function TiendaContent({
                   description="Esta tienda aún no ha añadido productos."
                 />
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" role="list" aria-label="Productos">
-                  {productos.map((producto, i) => (
-                    <div key={producto.id} role="listitem">
-                      <button
-                        type="button"
-                        className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[16px]"
-                        onClick={() => setSelectedProduct(producto)}
-                        aria-label={`Ver detalle de ${producto.nombre}`}
-                      >
-                        <ProductCard producto={producto} index={i} />
-                      </button>
+                <div className="flex flex-col gap-10">
+                  {Array.from(new Set(productos.map(p => p.categoria || 'Otros'))).map((categoria) => (
+                    <div key={categoria}>
+                      {Array.from(new Set(productos.map(p => p.categoria || 'Otros'))).length > 1 && (
+                        <h3 className="font-bold text-[#0E2A52] text-xl mb-4">{categoria}</h3>
+                      )}
+                      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" role="list" aria-label={`Productos en ${categoria}`}>
+                        {productos.filter(p => (p.categoria || 'Otros') === categoria).map((producto, i) => (
+                          <div key={producto.id} role="listitem">
+                            <button
+                              type="button"
+                              className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-[16px]"
+                              onClick={() => setSelectedProduct(producto)}
+                              aria-label={`Ver detalle de ${producto.nombre}`}
+                            >
+                              <ProductCard producto={producto} index={i} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>

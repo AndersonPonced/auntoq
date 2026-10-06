@@ -95,6 +95,7 @@ export default function PerfilPage() {
           fotosUrls: p.fotos_urls ?? (p.foto_url ? [p.foto_url] : []),
           descripcion: p.descripcion,
           tienda_id: p.tienda_id,
+          categoria: p.categoria,
         })));
       }
       setLoading(false);
@@ -152,6 +153,7 @@ export default function PerfilPage() {
       foto_url: values.fotoUrl,
       fotos_urls: values.fotosUrls,
       disponible: values.disponible ?? true,
+      categoria: values.categoria,
     }).select().single();
 
     if (!error && data) {
@@ -172,6 +174,7 @@ export default function PerfilPage() {
       foto_url: values.fotoUrl,
       fotos_urls: values.fotosUrls,
       disponible: values.disponible ?? true,
+      categoria: values.categoria,
     }).eq('id', id);
 
     if (!error) {
@@ -370,7 +373,7 @@ export default function PerfilPage() {
               </div>
 
               {agregandoProducto && (
-                <ProductoForm submitLabel="Agregar" onCancel={() => setAgregandoProducto(false)} onSubmit={handleAgregarProducto} />
+                <ProductoForm categoriasExistentes={Array.from(new Set(productos.map(p => p.categoria).filter(Boolean))) as string[]} submitLabel="Agregar" onCancel={() => setAgregandoProducto(false)} onSubmit={handleAgregarProducto} />
               )}
 
               {!agregandoProducto && productos.length === 0 && (
@@ -387,7 +390,7 @@ export default function PerfilPage() {
                   {productos.map((p, i) =>
                     editandoProductoId === p.id ? (
                       <li key={p.id} className="col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5">
-                        <ProductoForm initialValues={p} submitLabel="Guardar" onCancel={() => setEditandoProductoId(null)} onSubmit={(values) => handleActualizarProducto(p.id, values)} />
+                        <ProductoForm categoriasExistentes={Array.from(new Set(productos.map(p => p.categoria).filter(Boolean))) as string[]} initialValues={p} submitLabel="Guardar" onCancel={() => setEditandoProductoId(null)} onSubmit={(values) => handleActualizarProducto(p.id, values)} />
                       </li>
                     ) : confirmandoEliminarId === p.id ? (
                       <li key={p.id} className="flex flex-col items-center justify-center gap-2 text-center bg-red-50 border border-red-200 rounded-[16px] p-3 min-h-[152px]">

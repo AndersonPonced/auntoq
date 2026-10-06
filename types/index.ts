@@ -36,6 +36,8 @@ export interface Tienda {
   paginaWeb?: string;
   /** Logo cuadrado de la tienda (opcional) — usado en el lockup de marca al compartir un producto. */
   logoUrl?: string;
+  /** Categorías personalizadas creadas por el dueño de la tienda (ej. "Pizzas", "Bebidas"). */
+  categoriasPersonalizadas?: string[];
 }
 
 export interface Producto {
@@ -47,4 +49,5 @@ export interface Producto {
   precio: number;
   descripcion?: string;
   disponible: boolean;
+  categoria?: string;
 }
